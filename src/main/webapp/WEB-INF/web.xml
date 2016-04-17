@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--
+  - This is the Cocoon web-app configurations file
+  -
+  - $Id$
+  -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>Servlet 2.5 Web Application</display-name>
+  <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+<!--   <filter> -->
+<!--     <filter-name>SessionFilter</filter-name> -->
+<!--     <filter-class> -->
+<!--        com.chungli.filter.SessionFilter -->
+<!--     </filter-class> -->
+<!--     <init-param> -->
+<!--         <param-name>avoid-urls</param-name> -->
+<!--         <param-value>index.jsp</param-value> -->
+<!--     </init-param> -->
+<!-- </filter> -->
+<!-- <filter-mapping> -->
+<!--     <filter-name>SessionFilter</filter-name> -->
+<!--     <url-pattern>/*</url-pattern> -->
+<!-- </filter-mapping> -->
+  
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+  <display-name>Abizin Vendor Application</display-name>
+  <servlet>
+    <servlet-name>dispatch</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dispatch</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+			/WEB-INF/dispatch-*.xml,/WEB-INF/applicationContext.xml
+		</param-value>
+  </context-param>
+<!--   <context-param> -->
+<!--     <param-name>contextConfigLocation</param-name> -->
+<!--     <param-value> -->
+<!-- 		 /WEB-INF/applicationContext.xml -->
+<!-- 		</param-value> -->
+<!--   </context-param> -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

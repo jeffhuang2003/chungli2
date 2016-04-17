@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+   <classPathEntry location="D:\chungli_workspace\sqljdbc4.jar" />
+  <context id="sogo" >
+    <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver" connectionURL="jdbc:sqlserver://localhost:1433;databaseName=chungli" userId="sa" password="1234" ></jdbcConnection>
+    <javaTypeResolver>
+        <property name="forceBigDecimals" value="true" />			
+	</javaTypeResolver>
+    
+    <javaModelGenerator targetPackage="com.chungli.dto" targetProject="chungli2">
+     <property name="enableSubPackages" value="false" />
+	 <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.chungli.mapper" targetProject="chungli2" />
+    <javaClientGenerator targetPackage="com.chungli.mapper" targetProject="chungli2" type="XMLMAPPER" />
+    <table  tableName="UserProfile" domainObjectName="UserProfile">
+      <columnOverride column="UserId" property="userId" />
+      <columnOverride column="ChineseName" property="chineseName" />
+      <columnOverride column="EnglishName" property="englishName" />
+      <columnOverride column="Password" property="password" />
+       <columnOverride column="Email" property="email" />
+      <columnOverride column="Phone" property="phone" />
+      <columnOverride column="Team" property="team" />
+      <columnOverride column="LeaderEmail" property="leaderEmail" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+  <table  tableName="Team" domainObjectName="Team">
+      <columnOverride column="TeamId" property="teamId" />
+      <columnOverride column="TeamName" property="teamName" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+      <table  tableName="UserLive" domainObjectName="UserLive">
+      <columnOverride column="UserId" property="userId" />
+       <columnOverride column="UserLiveId" property="userLiveId" />
+      <columnOverride column="EaId" property="eaId" />
+      <columnOverride column="BrokId" property="brokId" />
+       <columnOverride column="Count" property="count" />
+      <columnOverride column="Status" property="Status" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+     <table  tableName="UserRefence" domainObjectName="UserRefence">
+      <columnOverride column="UserId" property="userId" />
+      <columnOverride column="ReferrerId" property="referrerId" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+    <table  tableName="EaProgram" domainObjectName="EaProgram">
+      <columnOverride column="EaId" property="eaId" />
+      <columnOverride column="eaName" property="eaName" />
+      <columnOverride column="EaPayAmount" property="eaPayAmount" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+    <table  tableName="Brokerage" domainObjectName="Brokerage">
+      <columnOverride column="BrokId" property="BrokId" />
+      <columnOverride column="brokName" property="brokName" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+     <table  tableName="UserPay" domainObjectName="UserPay">
+      <columnOverride column="UserPayID" property="userPayID" />
+      <columnOverride column="UserId" property="userId" />
+      <columnOverride column="EaId" property="eaId" />
+      <columnOverride column="EaPayAmount" property="eaPayAmount" />
+      <columnOverride column="StartTime" property="startTime" />
+      <columnOverride column="EndTime" property="endTime" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+  </context>
+</generatorConfiguration>

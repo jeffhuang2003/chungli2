@@ -1,0 +1,244 @@
+﻿@charset "utf-8";
+
+
+/* common*/
+input[type=checkbox]{
+	cursor:hand;
+	}
+table.tblOutFrame{
+	width:1016px;
+	border:0px;
+	font-size:9pt;
+
+}
+
+
+.docTitle{
+	background-color:#09C;
+	font-family:arial;
+	color:white;
+	font-size:10pt;
+	padding:3px;
+	font-weight:bold;
+	
+}
+/*cust data */
+
+body {
+	background-color:#EFF0E1;
+}
+
+input[type=text,password]{
+	border:1px solid gray;
+	font-size:9pt;
+	font-family:Arial;
+	padding:2px;
+
+}
+
+
+
+input[type=text].rOnly{
+	border:1px solid gray;
+	background-color:lightgrey;
+	width:100%;
+}
+
+input[type=button]{
+	font-size:9pt;
+	font-family:Arial;
+}
+
+select.CusDtl{
+	border:1px solid gray;
+	font-size:9pt;
+	font-family:Arial;
+	width:100px;
+}
+
+
+input[type=button].btnDtl{
+	font-size:9pt;
+	font-family:Arial;
+	width:100px;
+}
+
+input[type=button].btnCommon,  .btnGroup input[type=button]{
+	font-size:9pt;
+	font-family:Arial;
+	width:90px;;
+}
+
+/* 儲存格中的表格  */
+table.tblInTD{
+	border-collapse: collapse;
+	font-size:9pt;
+	border:0px;
+	font-family:Arial;
+	color:darkblue;
+	width:100%;
+}
+table.tblInTD th{
+	font-weight:bold;
+	text-align:left;
+	padding-left:5px;
+}
+table.tblInTD td{
+	vertical-align:middle;
+}
+table.tblInTD input[type=text]{
+	width:100%;
+}
+
+table.tblInTD textarea{
+	width:100%;
+	border:1px solid gray;
+}
+
+table.tblInTD select{
+	width:100%;
+	border:1px solid gray;
+}
+
+table.kpi{
+	font-size:9pt;
+}
+table.kpi input[type=text]{
+	font-size:9pt;
+	border:1px solid gray;
+}
+
+legend.kpi{
+	font-size:9pt;
+}
+
+table.result{
+	border-collapse:collapse;
+	border-spacing:0px;
+	border-width:0px;
+	font-size:9pt;
+	font-family:Arial;
+	color:darkblue;
+	background-color:#D5E7FD;
+	width:100%;
+}
+
+table.result thead{
+	padding:5px;
+}
+table.result th{
+	padding:5px;
+	font-weight:normal;
+	background-color:lightgrey;
+	border:1px solid gray;
+	/*background-color:#A2CAFB;	*/
+	background-color:lightgray;/*#DEE0C0;*/
+	color:black;
+}
+table.result td{
+	border:1px solid gray;
+}
+
+.ttReason{
+	width:100%;
+	font-size:9pt;
+}
+
+fieldset{
+	font-size:9pt;
+	padding:5px;
+}
+
+/*---- 彈出視窗-選值 -------*/
+body.vSelector{
+	background-color:lightgrey;
+	font-size:9pt;
+}
+table.tblValSelector{
+	width:250px;
+	border:0px;
+}
+/*------------------------*/
+
+/*---一般表格--------------*/
+table.tblCommOuter{
+	width:100%;
+	border:0px;
+}
+table.tblQryCond{
+	font-size:10pt;
+	font-family:"微軟正黑體", "新細明體";
+	width:100%;
+}
+
+table.tblQryCond th{
+	font-weight:bold;
+}
+
+table.tblQryCond input[type=text]{
+	border:1px solid gray;
+	font-family:inherit;
+}
+
+table.tblQryCond input[type=button]{
+	padding:2px;
+	font-family:inherit;
+	width:80px;
+	height:24px;
+}
+
+table.tblItemList{
+	border-collapse:collapse;
+	border-spacing:0px;
+	border-width:0px;
+	font-size:10pt;
+	font-family:Arial,"微軟正黑體", "新細明體" ;
+	color:black;
+	/*background-color:#D5E7FD;*/
+	background-color:white;
+	width:100%;
+}
+
+table.tblItemList th{
+	background-color:lightgrey;
+	border:1px solid gray;
+	padding:10px;
+}
+
+table.tblItemList td{
+	border:1px solid gray;
+	padding:3px;
+}
+	
+/*-----------------------------------*/
+
+/*--表格-單筆資料顯示/編輯------------------*/
+
+table.tblOneRow{
+	font-family:"微軟正黑體", "新細明體";
+	font-size:10pt;
+}
+
+table.tblOneRow th{
+	background-color:lightgrey;
+	font-weight:bold;
+}
+
+table.tblOneRow td{
+	text-align:left;
+}
+
+table.tblOneRow input[type=text]{
+	border:1px solid gray;
+	width:100%;
+	font-size:inherit;
+	font-family:inherit;
+	padding:3px;
+}
+
+table.tblOneRow input[type=button]{
+	padding:2px;
+	font-family:inherit;
+	width:80px;
+	height:24px;
+}

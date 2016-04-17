@@ -1,0 +1,61 @@
+<!--cust data-->
+.custForm{
+	background-color:#EFF0E1
+}
+
+input[type=text]{
+	border:1px solid gray;
+	font-size:9pt;
+	font-family:Arial;
+}
+
+input[type=text].inTD{
+	width:100%;
+}
+
+
+input[type=text].rOnly{
+	border:1px solid gray;
+	background-color:lightgrey;
+	width:100%;
+}
+
+input[type=button]{
+	font-size:9pt;
+	font-family:Arial;
+}
+
+select.CusDtl{
+	border:1px solid gray;
+	font-size:9pt;
+	font-family:Arial;
+	width:100px;
+}
+
+input[type=button].CusDtl{
+	font-size:9pt;
+	font-family:Arial;
+	width:100px;
+}
+
+input[type=button].CusBtn{
+	font-size:9pt;
+	font-family:Arial;
+	width:70px;;
+}
+
+table.table1{
+	border:0px;
+	font-size:9pt;
+	font-family:Arial;
+	color:darkblue;
+}
+table.table1 th{
+	font-weight:normal;
+	text-align:left;
+	padding-left:5px;
+}
+
+legend.kpi{
+	font-size:9pt;
+}

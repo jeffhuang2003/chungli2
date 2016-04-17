@@ -1,0 +1,59 @@
+﻿select{
+	border:1px solid gray;
+	}
+button{
+	border:1px solid gray;
+	}
+
+table.onerec {
+	border-collapse: collapse;
+	font: 11pt Verdana, Arial, Helvetica, sans-serif;
+	text-align: center;
+}
+
+th.onerec {
+	background: #3e83c9;
+	color: #ffffff;
+	font-weight: bold;
+	padding: 2px 4px;
+	border-right: 1px solid #ffffff;
+}
+ 
+td.onerec {
+	padding: 2px 4px;
+	border-bottom: 1px solid #95bce2;
+	vertical-align: top;
+}
+
+table {
+	border-collapse: collapse;
+	font: 9px Verdana, Arial, Helvetica, sans-serif;
+	text-align: center;
+}
+ 
+th {
+	background: #3e83c9;
+	color: #ffffff;
+	font-weight: bold;
+	padding: 2px 4px;
+	border-right: 1px solid #ffffff;
+}
+ 
+td {
+	padding: 2px 4px;
+	border-bottom: 1px solid #95bce2;
+	vertical-align: top;
+}
+ 
+td * {
+	padding: 2px 4px;
+}
+	
+tr.alt td {
+	background: white;
+}
+ 
+tr.over td {
+	background: skyblue;
+}
+	

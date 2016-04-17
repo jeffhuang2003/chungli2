@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../css/tt.css">
+<link rel="stylesheet" href="../css/tab.css">
+<title>Contact Interaction</title>
+<script type="text/javascript"  src="../js/jquery-1.6.4.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	// 預設顯示第一個 Tab
+	var _showTab = 0;
+	$('ul.tabs li').eq(_showTab).addClass('active');
+	$('.tab_content').hide().eq(_showTab).show();
+ 
+	// 當 li 頁籤被點擊時...
+	$('ul.tabs li').click(function() {
+		// 找出 li 中的超連結 href(#id)
+		var $this = $(this),
+			_clickTab = $this.find('a').attr('href');
+		// 把目前點擊到的 li 頁籤加上 .active
+		$this.addClass('active').siblings('.active').removeClass('active');
+		// 淡入相對應的內容並隱藏兄弟元素
+		$(_clickTab).stop(false, true).fadeIn().siblings().hide();
+ 		return false;
+	}).find('a').focus(function(){
+		this.blur();
+	});
+}); 
+
+function goPage(formId,vAction,vTarget){
+	$(formId).attr({action:vAction,target:vTarget}).submit();
+}
+</script>
+</head>
+<body class="custForm">
+<form name="form1">
+<table class="tblOutFrame">
+  <tr><td><div class="docTitle">Contact Interaction</div></td></tr>
+  <tr><!--上-->
+    <td valign="top">
+        <table width="100%" >
+            <tr>
+                <td style="width:47%"><!--客戶基本資料-左-->
+                    <table width="100%" class="tblInTD" >
+                      <tr>
+                        <th>電話\線路號碼\IP</th>
+                        <td> <input name="Text1" type="text"/></td>
+                        <th>VPN ID</th>
+                        <td> <input name="Text2" type="text"/></td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td><input name="Checkbox1" type="checkbox" />含已退租,換號服務</td>
+                        <td>&nbsp;</td>
+                        <td><input name="Checkbox3" type="checkbox" />開新工單</td>
+                      </tr>
+                      <tr>
+                        <td style="height: 22px"></td>
+                        <td style="height: 22px">
+                        <input name="Checkbox2" type="checkbox" />以電話查詢相關服務</td>
+                        <td style="height: 22px"></td>
+                        <td style="height: 22px"></td>
+                      </tr>
+                      <tr>
+                        <th>身份證字號</th>
+                        <td> <input name="Text3" type="text"/></td>
+                        <th>統一編號</th>
+                        <td> <input name="Text5" type="text"/></td>
+                      </tr>
+                      <tr>
+                        <th>代表帳戶</th>
+                        <td> <input name="Text4" type="text"/></td>
+                        <th>用戶號碼</th>
+                        <td> <input name="Text6" type="text"/></td>
+                      </tr>
+                      <tr>
+                        <th>聯絡電話</th>
+                        <td colspan="3"> 
+                        <input name="Text7" type="text" style="width: 100%;" class="rOnly"/></td>
+                      </tr>
+                      <tr>
+                        <td><input name="Button1" type="button" value="聯絡資訊" class="btnDtl" disabled/></td>
+                        <td colspan="3" style="padding:0px; margin:0px;">
+                            <table width="100%" border="0" >
+                              <tr>
+                                <td><input name="Text11" type="text" style="width:100%;"/></td>
+                                <td><input name="Text11" type="text" style="width:100%;"/></td>
+                              </tr>
+                            </table>
+                        </td>              </tr>
+                      <tr>
+                        <td>
+                        <input name="Button2" type="button" value="公司資訊" class="btnDtl" disabled/></td>
+                        <td colspan="3"><input name="Text8" type="text" style="width: 100%;" class="rOnly"/></td>
+                      </tr>
+                      <tr>
+                        <td style="height: 23px">
+                        <input name="Button3" type="button" value="用戶資訊" class="btnDtl" disabled/></td>
+                        <td colspan="3" style="height: 23px"><input name="Text14" type="text" style="width: 100%;" class="rOnly"/></td>
+                      </tr>
+                      <tr>
+                        <td><select name="Select1" class="btnDtl">
+                        <option></option>
+                        <option selected="selected">Primary-1</option>
+                        </select>&nbsp;</td>
+                        <td colspan="3" style="padding:0px; margin:0px;">
+                            <table width="100%" border="0" >
+                              <tr>
+                                <td><input name="Text11" type="text" class="rOnly" style="width:100%;"/></td>
+                                <td><input name="Text11" type="text" class="rOnly" style="width:100%;"/></td>
+                              </tr>
+                            </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><input name="Button4" type="button" value="COMS資訊" class="btnDtl" disabled/></td>
+                        <td colspan="3" style="padding:0px; margin:0px;">
+                            <table width="100%" border="0">
+                              <tr>
+                                <td><input name="Text11" type="text" class="rOnly" style="width:100%;"/></td>
+                                <td><input name="Text11" type="text" class="rOnly" style="width:100%;"/></td>
+                              </tr>
+                            </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><input name="Button5" type="button" value="Rebate" class="btnDtl"/></td>
+                        <td colspan="3"><input name="Text15" type="text" style="width: 100%;"/></td>
+                      </tr>
+                      <tr>
+                        <td><input name="Button6" type="button" value="服務明細" class="btnDtl" disabled/></td>
+                        <td><input name="Text17" type="text" class="rOnly"/></td>
+                        <th>企業用戶類別</th>
+                        <td>
+                          <input name="Text18" type="text" class="rOnly"/>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td style="width:6%" valign="top"><!--客戶基本資料-中-->
+                  <input name="Button7" type="button" value="查詢" style="width:70px;"/>
+                  <input name="Button20" type="button" value="清除" style="width:70px;"/></td>
+              <td style="width:47%" valign="top"><!--客戶基本資料-右-->
+              	<table width="100%" border="0" class="tblInTD">
+                  <tr>
+                    <th>xxxxx</th>
+                    <td colspan="4"><input name="Text9" type="text"/></td>
+                  </tr>
+                  <tr>
+                    <th>聯絡方式</th>
+                    <td colspan="4">
+                   	  <select name="Select2" >
+                      		<option></option>
+                      		<option selected="selected">電話</option>
+                    	</select> 
+                        <label>
+                    	  <input type="radio" name="contact_type" value="incoming" />來電
+                    	  <input type="radio" name="contact_type" value="outgoing" />去電
+                  	  	</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>產品</th>
+                    <td colspan="4"><select name="Select3" >
+                      <option>___________________</option>
+                      <option selected="selected"></option>
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <th>原因1</th>
+                    <td colspan="4"><select name="Select4" >
+                      <option>___________________</option>
+                      <option selected="selected"></option>
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <th>原因2</th>
+                    <td colspan="4"><select name="Select5" >
+                      <option>___________________</option>
+                      <option selected="selected"></option>
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <th>xxx</th>
+                    <td colspan="4"><textarea name="Text10" rows="4"></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>催收狀況</th>
+                    <td><input name="Text12" type="text" class="rOnly"/></td>
+                    <td align="right"><input type="checkbox" name="checkbox" id="checkbox" diabled/></td>
+                    <td>已加入CCCare</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <th>帳戶狀態</th>
+                    <td><input name="Text13" type="text" class="rOnly"/></td>
+                    <th>eBilling</th>
+                    <td><input name="Text16" type="text" class="rOnly"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5">
+                        <table width="100%" border="0">
+                          <tr>
+                            <td><input name="Button17" type="button" value="Account View" style="width:70px;"/></td>
+                            <td><span style="width:6%">
+                              <input name="Button18" type="button" value="用戶移轉" style="width:70px;"/>
+                            </span></td>
+                            <td><span style="width:6%">
+                              <input name="Button19" type="button" value="帳戶資料" style="width:70px;"/>
+                            </span></td>
+                          </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+        </table>    
+    </td>
+  </tr>
+  <tr><!--中-->
+    <td>
+    	<fieldset >
+        	<legend class="kpi" >計時</legend>
+            <table width="100%" border="0" class="kpi" >
+              <tr>
+                <td style="width:33%">等待中 <input type="text" style="background-color:lightgrey" value="0" /></td>
+                <td style="width:33%">
+                	服務人員計時 
+                  	<input type="text" value="11:10:38 AM" /><input type="button" name="btnPause" value="Pause" />
+				</td>
+                <td style="width:33%">系統計時 <input type="text" value="11:10:38 AM" /></td>
+              </tr>
+            </table>
+
+        </fieldset>
+    </td>
+  </tr>
+  <tr><!--下-->
+    <td>
+    	<table width="100%" border="0">
+          <tr>
+            <td style="width:100px" valign="top" >
+            	<div style="padding-top:10px" class="btnGroup">
+                    <input name="Button8" type="button"  value="儲存/更新"/><br/>
+                    <input name="Button9" type="button"  value="儲存/新增"/><br/>
+                    <input name="Button10" type="button"  value="儲存/下一筆"/><br/>
+                    <input name="Button11" type="button"  value="離開" onclick="window.close();"/><br/>
+                    <input name="Button12" type="button"  value="附件" disabled/><br/>
+                    <input name="Button13" type="button"  value="新工單" onclick="goPage(form1,'../tt/tt_newcase.html','_self')"/><br/>
+                    <input name="Button14" type="button"  value="新執行工單"/><br/>
+                    <input name="Button16" type="button"  value="新增文件需求"/><br/>
+                </div>
+          	</td>
+            <td >
+                <div class="abgne_tab" >
+                    <ul class="tabs">
+                        <li><a href="#tab1">聯絡記錄</a></li>
+                        <li><a href="#tab2">工單記錄</a></li>
+                        <li><a href="#tab3">重要訊息</a></li>
+                        <li><a href="#tab4">電話/線路資訊</a></li>
+                        <li><a href="#tab5">申請書編號資訊</a></li>
+                    </ul>
+                    <div class="tab_container">
+                        <div id="tab1" class="tab_content">
+                            <table width="100%" border="0">
+                              <tr>
+                                <td>
+                                    過去 <input type="text" value="365" style="width:50px;"/> &nbsp;
+                                  <select><option>Days</option></select>&nbsp;
+                                         <input type="button" value="查詢"/>&nbsp;
+                                  <input type="checkbox" value="Xxx"/> 快速顯示查詢結果
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                    <table width="100%" border="1" class="result">
+                                      <tr>
+                                        <th>&nbsp;</th>
+                                        <th>客戶編號</th>
+                                        <th>客戶名稱</th>
+                                        <th>建立日期</th>
+                                        <th>使用者</th>
+                                        <th>方式</th>
+                                        <th>主旨</th>
+                                        <th>類型</th>
+                                        <th>產品</th>
+                                        <th>原因1</th>
+                                        <th>原因2</th>
+                                        <th>結果</th>
+                                        <th>一次完成</th>
+                                      </tr>
+                                      <tr>
+                                        <td><label>
+                                          <input type="checkbox" name="checkbox2" id="checkbox2" />
+                                        </label></td>
+                                        <td>1</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><input type="checkbox" name="checkbox3" id="checkbox3" /></td>
+                                        <td>2</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><input type="checkbox" name="checkbox4" id="checkbox4" /></td>
+                                        <td>3</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><input type="checkbox" name="checkbox5" id="checkbox5" /></td>
+                                        <td>4</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><input type="checkbox" name="checkbox6" id="checkbox6" /></td>
+                                        <td>5</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><input type="checkbox" name="checkbox7" id="checkbox7" /></td>
+                                        <td>6</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                    </table>
+                                    
+                                    
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                            </table>
+        
+                        </div>
+                        <div id="tab2" class="tab_content" >
+                            <h2>工單記錄</h2>
+                            <p>1. __________________________________________________________________________</p>
+                            <p>2. __________________________________________________________________________</p>
+                            <p>3. __________________________________________________________________________</p>
+                            <p>4. __________________________________________________________________________</p>
+                            <p>5.  __________________________________________________________________________</p>
+                        </div>
+                        <div id="tab3" class="tab_content" >
+                        <h2>重要訊息</h2>
+                        <p>1. __________________________________________________________________________</p>
+                        <p>2. __________________________________________________________________________</p>
+                        <p>3. __________________________________________________________________________</p>
+                        <p>4. __________________________________________________________________________</p>
+                        <p>5.  __________________________________________________________________________</p>
+                        </div>
+                        <div id="tab4" class="tab_content" >
+                            <h2>電話/線路資訊</h2>
+                            <p>1. __________________________________________________________________________</p>
+                            <p>2. __________________________________________________________________________</p>
+                            <p>3. __________________________________________________________________________</p>
+                            <p>4. __________________________________________________________________________</p>
+                          <p>5.  __________________________________________________________________________</p>
+                            <p>1. __________________________________________________________________________</p>
+                            <p>2. __________________________________________________________________________</p>
+                            <p>3. __________________________________________________________________________</p>
+                            <p>4. __________________________________________________________________________</p>
+                            <p>5.  __________________________________________________________________________</p>
+                        </div>
+                        <div id="tab5" class="tab_content" >
+                            <h2>申請書編號資訊</h2>
+                            <p>1. __________________________________________________________________________</p>
+                            <p>2. __________________________________________________________________________</p>
+                            <p>3. __________________________________________________________________________</p>
+                            <p>4. __________________________________________________________________________</p>
+                            <p>5.  __________________________________________________________________________</p>
+                        </div></div>
+                </div>
+            </td>
+          </tr>
+        </table>
+
+
+    </td>
+  </tr>
+</table>
+
+</form>
+
+
+
+</body>
+</html>
