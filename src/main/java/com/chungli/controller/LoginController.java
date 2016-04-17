@@ -50,11 +50,10 @@ public class LoginController extends BaseController{
 				if (user != null ) {
 					if (user.getEmail() == null || "".equals(user.getEmail())) {
 						url =  "pages/login" ;
-					} else if (user.getUserId() == null || "".equals(user.getUserId())) {
+					} else if (user.getEmail() == null || "".equals(user.getEmail())) {
 						url =  "pages/login" ;
 					} else{
 						map.put("email", user.getEmail());
-						map.put("userId", user.getUserId());
 						map.put("userSize", -1);
 						map.put("chineseName", "");
 						url =  "pages/userData" ;

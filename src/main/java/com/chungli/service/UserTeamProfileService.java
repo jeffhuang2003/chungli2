@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chungli.dto.UserProfile;
 import com.chungli.mapper.UserProfileExtraMapper;
 import com.chungli.mapper.UserProfileMapper;
-import com.chungli.mapper.UserRefenceMapper;
 
 
 @Service
@@ -21,8 +20,7 @@ public class UserTeamProfileService {
 	private UserProfileMapper userMapper ;
 	@Autowired
 	private UserProfileExtraMapper userProfileExtraMapper ;
-	@Autowired
-	private UserRefenceMapper userRefenceMapper ;
+
 
 	
 	@Transactional(rollbackFor=Exception.class)

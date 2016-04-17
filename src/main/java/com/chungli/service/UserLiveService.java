@@ -1,6 +1,5 @@
 package com.chungli.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,18 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
-import com.chungli.controller.LoginController;
 import com.chungli.dto.UserLive;
 import com.chungli.dto.UserLiveExample;
 import com.chungli.dto.UserLiveKey;
-import com.chungli.dto.UserProfile;
-import com.chungli.dto.UserProfileExample;
-import com.chungli.dto.UserProfileExample.Criteria;
-import com.chungli.dto.UserRefence;
 import com.chungli.mapper.UserLiveMapper;
-import com.chungli.mapper.UserProfileExtraMapper;
-import com.chungli.mapper.UserProfileMapper;
-import com.chungli.mapper.UserRefenceMapper;
+
 
 
 @Service

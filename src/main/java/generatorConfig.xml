@@ -15,14 +15,14 @@
     <sqlMapGenerator targetPackage="com.chungli.mapper" targetProject="chungli2" />
     <javaClientGenerator targetPackage="com.chungli.mapper" targetProject="chungli2" type="XMLMAPPER" />
     <table  tableName="UserProfile" domainObjectName="UserProfile">
-      <columnOverride column="UserId" property="userId" />
+      <columnOverride column="Email" property="email" />
       <columnOverride column="ChineseName" property="chineseName" />
       <columnOverride column="EnglishName" property="englishName" />
       <columnOverride column="Password" property="password" />
-       <columnOverride column="Email" property="email" />
       <columnOverride column="Phone" property="phone" />
       <columnOverride column="Team" property="team" />
       <columnOverride column="LeaderEmail" property="leaderEmail" />
+      <columnOverride column="RoleId" property="roleId" />
       <columnOverride column="CrDate" property="crDate" />
       <columnOverride column="CrUser" property="crUser" />
       <columnOverride column="DateStamp" property="dateStamp" />
@@ -43,14 +43,6 @@
       <columnOverride column="BrokId" property="brokId" />
        <columnOverride column="Count" property="count" />
       <columnOverride column="Status" property="Status" />
-      <columnOverride column="CrDate" property="crDate" />
-      <columnOverride column="CrUser" property="crUser" />
-      <columnOverride column="DateStamp" property="dateStamp" />
-      <columnOverride column="UserStamp" property="userStamp" />
-    </table>
-     <table  tableName="UserRefence" domainObjectName="UserRefence">
-      <columnOverride column="UserId" property="userId" />
-      <columnOverride column="ReferrerId" property="referrerId" />
       <columnOverride column="CrDate" property="crDate" />
       <columnOverride column="CrUser" property="crUser" />
       <columnOverride column="DateStamp" property="dateStamp" />
@@ -80,6 +72,14 @@
       <columnOverride column="EaPayAmount" property="eaPayAmount" />
       <columnOverride column="StartTime" property="startTime" />
       <columnOverride column="EndTime" property="endTime" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+     <table  tableName="Role" domainObjectName="Role">
+      <columnOverride column="RoleId" property="roleId" />
+      <columnOverride column="RoleName" property="roleName" />
       <columnOverride column="CrDate" property="crDate" />
       <columnOverride column="CrUser" property="crUser" />
       <columnOverride column="DateStamp" property="dateStamp" />

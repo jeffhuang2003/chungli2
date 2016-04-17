@@ -9,7 +9,6 @@
 <script>
 $(document).ready(function(){
  	jQuery('#formUser').validationEngine();//'attach', {promptPosition : "center", autoPositionUpdate : true});
- 	$("#team").val("${team}");
  	$.fn.serializeObject = function(){  
         var o = {};  
         var a = this.serializeArray();  
@@ -38,9 +37,9 @@ $(document).ready(function(){
     //離開
     $("#btnLeave").click(function(){
     	$("#formQueryUser").attr("action","/chungli2/queryUserProfileByLeaderInsert");
+    	$('#formQueryUser').append("<input type=hidden name='leaderEmail' id='leaderEmail' value='" + $("#leaderEmail").val() +"'></input>");
     	$("#formQueryUser").submit();
     });
-    
     //新增
     $("#btnInsert").click(function(){
     	  $("#btnInsert").attr("disabled",true);
@@ -48,68 +47,65 @@ $(document).ready(function(){
   			$("#btnInsert").attr("disabled",false);
   		     return;  
   		} 
-		$.ajax({
-            type : "post",
-            url : '/chungli2/insertUserProfile',
-            cache : false,
-            data : $.toJSON($('#formUser').serializeObject()),
-            dataType : 'json',
-            contentType : "application/json",
-            success : function(result) {
-            	if(result.success=="success"){
-            		$("#btnInsert").attr("disabled",true);
-            		alert("新增成功 ");
-            	} else {
-            		$("#btnInsert").attr("disabled",false);
-            		alert("新增失敗  :  "+ result.errorMessage);;
-            	}
-            },
-
-            error : function(result) {
-
-            }
-
-        });
+  		if (!checkEmail()){
+  			$("#btnInsert").attr("disabled",false);
+  	    }
     });
 });
 
-function checkEmail(obj){
-	  var re1 =  /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/; 
-	   if (re1.test($(obj).val()) != true) {
-	   	  alert("你的電子郵件格式不合！");
-	      $(obj).focus();   
-	      return false ;
-	   }
-       if ($("#oldEmail").val() == "" || $("#oldEmail").val() == null) {
-    	   $("#oldEmail").val($(obj).val()) ;
-       } else {
-           if ($("#oldEmail").val() != $(obj).val()) {
-        	   //email被修改
-        	   var data = {"email":$(obj).val()};
-        	   $.ajax({
-                 type : "post",
-                 url : '/chungli2/checkEmail',
-                 cache : false,
-                 data :  $.toJSON(data),
-                 dataType : 'json',
-                 contentType : "application/json",
-                 success : function(result) {
-                 	if(result.success=="success"){
-                 	 	 alert("檢查結果 : "+ result.errorMessage);
-                 	} else {
-        	         	 alert("檢查結果 : "+ result.errorMessage);	
-        	         	 $(obj).focus();   
-                 	}
-                 },
+function checkEmail(){
+	
+	 // var re1 =   /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/; 
+// 	   if (re1.test($("#userEmail").val())) {
+// 	   	  alert("你的電子郵件格式不合！");
+// 	      $("#userEmail").focus();
+// 	      return false ;   
+// 	   }
+	   var data = {"email" : $("#userEmail").val()};
+	   $.ajax({
+         type : "post",
+         url : '/chungli2/checkEmail',
+         cache : false,
+         data :  $.toJSON(data),
+         dataType : 'json',
+         contentType : "application/json",
+         success : function(result) {
+         	if(result.success=="success"){
+         	 	 alert("檢查結果 : "+ result.errorMessage);
+         		$.ajax({
+      	            type : "post",
+      	            url : '/chungli2/insertUserProfile',
+      	            cache : false,
+      	            data : $.toJSON($('#formUser').serializeObject()),
+      	            dataType : 'json',
+      	            contentType : "application/json",
+      	            success : function(result) {
+      	            	if(result.success=="success"){
+      	            		$("#btnInsert").attr("disabled",true);
+      	            		alert("新增成功 ");
+      	            	} else {
+      	            		$("#btnInsert").attr("disabled",false);
+      	            		alert("新增失敗  :  "+ result.errorMessage);;
+      	            	}
+      	            },
 
-                 error : function(result) {
-              	 		alert("檢查結果 : "+ result.errorMessage);; 
-              	 	 $(obj).focus();  
-                 }
+      	            error : function(result) {
 
-             });                              
-           }
-       }
+      	            }
+      	        });
+         	} else {
+	         	 alert("檢查結果 : "+ result.errorMessage);	
+	         	 $("#userEmail").focus();   
+	         	 return false ;   
+         	}
+         },
+
+         error : function(result) {
+      	 		alert("檢查結果 : "+ result.errorMessage);; 
+      	 	 $("#userEmail").focus();  
+      	 	 return false ;   
+         }
+     }); 
 }
 
 </script>
@@ -145,7 +141,7 @@ function checkEmail(obj){
                 <td  style="width:200px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:100px" align="left"><font size="3">帳號(E-Mail)</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="userEmail" name="userEmail" class="validate[required,maxSize[50]] text-input" onblur="checkEmail(this)" /></td>
+                <td style="width:100px" align="left"><font size="3">帳號(E-Mail)</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="userEmail" name="userEmail" class="validate[required,maxSize[50]] text-input" /></td>
             </tr>
             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
@@ -187,14 +183,8 @@ function checkEmail(obj){
         </table>
    </fieldset>
      </center>  
-     <input type="hidden" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px;background-color:black;"/> 
-     <input type="hidden" id="oldEmail" name="oldEmail"  value=""/> 
-      <input type="hidden" id="email" name="email"  value="${email}"/> 
 </form>
 <form id="formQueryUser" action="" method="post" target="_self" >
-   	<input type="hidden" style="width:200px" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px;background-color:black;"/>
-	<input type="hidden" style="width:200px" id="leaderEmail" name="leaderEmail"  value="${leaderEmail}" readonly="readonly" style="width:150px;background-color:black;"/>
-    <input type="hidden" style="width:200px" id="parentChineseName" name="parentChineseName"  value="${chineseName}" readonly="readonly" style="width:150px;background-color:black;"/>
 </form>
 </body>
 

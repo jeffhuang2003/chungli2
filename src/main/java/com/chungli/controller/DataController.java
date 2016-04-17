@@ -32,7 +32,6 @@ public class DataController extends BaseController{
 		if (session != null) {
 			UserProfile user = (UserProfile)session.getAttribute("user") ;
 			map.put("email", user.getEmail());
-			map.put("userId", user.getUserId());
 			map.put("userSize", -1);
 			map.put("chineseName", "");
 		}
@@ -42,9 +41,9 @@ public class DataController extends BaseController{
 	
 	
 	@RequestMapping(value="/userTeamInit" , method = RequestMethod.POST)
-	public ModelAndView userTeamInit(@RequestParam(value="email",required=false) String email 				, @RequestParam(value="userId",required=false) String userId,
-									 @RequestParam(value="leaderEmail",required=false) String leaderEmail 	, @RequestParam(value="leaderUserId",required=false) String leaderUserId ,
-									 @RequestParam(value="parentEmail",required=false) String parentEmail 	, @RequestParam(value="parentUserId",required=false) String parentUserId ,
+	public ModelAndView userTeamInit(@RequestParam(value="email",required=false) String email 				, 
+									 @RequestParam(value="leaderEmail",required=false) String leaderEmail 	, 
+									 @RequestParam(value="parentEmail",required=false) String parentEmail 	, 
 									 @RequestParam(value="control",required=false) String control ,HttpServletRequest request){
 		logger.debug("userTeamInit start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -53,14 +52,11 @@ public class DataController extends BaseController{
 		if (url != null) {
 			return new ModelAndView(url, map);
 		}
-		
+		logger.debug("email : " + email);
 		map.put("email", email);
-		map.put("userId", userId);
 		map.put("userSize", -1);
 		map.put("leaderEmail", leaderEmail);
-		map.put("leaderUserId", leaderUserId);
 		map.put("parentEmail", parentEmail);
-		map.put("parentUserId", parentUserId);
 		map.put("control", control);
 		logger.debug("userTeamInit end !!!");
 		return new ModelAndView("pages/userTeamData", map);
@@ -79,7 +75,6 @@ public class DataController extends BaseController{
 		if (session != null) {
 			UserProfile user = (UserProfile)session.getAttribute("user") ;
 			map.put("email", user.getEmail());
-			map.put("userId", user.getUserId());
 			map.put("userSize", -1);
 			map.put("chineseName", "");
 		}

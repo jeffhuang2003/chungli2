@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.chungli.dto.UserProfile;
-import com.chungli.dto.UserRefence;
 import com.chungli.service.UserProfileService;
-import com.chungli.service.UserRefenceService;
+
 
 
 @Controller
@@ -32,15 +31,12 @@ public class UserProfileController extends BaseController{
 	private static Logger logger = Logger.getLogger(UserProfileController.class);
 	@Autowired
 	private UserProfileService userProfileService;
-	@Autowired
-	private UserRefenceService userRefenceService;
 
 	@RequestMapping(value="/updateUserProfileInit", method = RequestMethod.POST)
 	public ModelAndView updateUserProfileInit(@RequestParam(value="userId",required=false) String userId , @RequestParam(value="leaderUserId",required=false) String leaderUserId,@RequestParam(value="leaderEmail",required=false) String leaderEmail,@RequestParam(value="chineseName",required=false) String chineseName ,HttpServletRequest request){
 		logger.debug("updateUserProfileInit start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
 		UserProfile userProfile = null ;
-		UserRefence userRefence = null ;
 		try {
 			String url = null ;
 			url = checkSession(request);
@@ -49,17 +45,10 @@ public class UserProfileController extends BaseController{
 			}
 			
 			userProfile = userProfileService.selectUserProfile(userId);
-			userRefence = userRefenceService.selectUserRefence(userId) ;
-			map.put("userId", userProfile.getUserId());
 			map.put("englishName", userProfile.getEnglishName());
 			map.put("phone", userProfile.getPhone());
 			map.put("email", userProfile.getEmail());
 			map.put("team", userProfile.getTeam());
-			if (userRefence !=null) {
-				map.put("leaderUserId", userRefence.getReferrerId());
-			} else {
-				map.put("leaderUserId", leaderUserId);
-			}
 			map.put("leaderEmail", userProfile.getLeaderEmail());
 			map.put("chineseName", userProfile.getChineseName());
 			map.put("parentChineseName", chineseName);
@@ -83,21 +72,10 @@ public class UserProfileController extends BaseController{
 			if (url != null) {
 				return new ModelAndView(url, map);
 			}
-			map.put("userId", userId);
 			map.put("leaderUserId", userId);
 			map.put("leaderEmail", email);
 			map.put("email", email);
 			map.put("chineseName", chineseName);
-			String tempStr = userId.substring(0,3) ;
-			if ("JON".equals(tempStr)) {
-				map.put("team", "3");
-			} else if ("PEL".equals(tempStr)){
-				map.put("team", "2");
-			} else if ("CHU".equals(tempStr)){
-				map.put("team", "1");
-			}else {
-				map.put("team", "4");
-			}
 		   		
 		} catch (Exception e) {
 			logger.debug("insertUserProfileInit error : " + e.getMessage());
@@ -116,6 +94,8 @@ public class UserProfileController extends BaseController{
 		JSONObject obj = new JSONObject();
 		String email = map.get("email") != null ? map.get("email").trim() : null ;
 		logger.debug("email : " + email);
+		String leaderEmail = map.get("leaderEmail") != null ? map.get("leaderEmail").trim() : null ;
+		logger.debug("leaderEmail : " + leaderEmail);
 		String chineseName = map.get("chineseName")!= null ? map.get("chineseName").trim() : null  ;
 		logger.debug("chineseName : " + chineseName);
 		String englishName = map.get("englishName")!= null ? map.get("englishName").trim() : null  ;
@@ -128,21 +108,20 @@ public class UserProfileController extends BaseController{
 		logger.debug("userId : " + userId);
 		String leaderUserId = map.get("leaderUserId")!= null ? map.get("leaderUserId").trim() : null  ;
 		logger.debug("leaderUserId : " + leaderUserId);
-		UserProfile user = new UserProfile() ;
+		UserProfile user = null ;
 		UserProfile leaderUser = null;
 		int count = 0 ;
 		Date sysDate = new Date();
 	    try {
-	    	leaderUser = userProfileService.selectUserProfile(leaderUserId);
+	    	leaderUser = userProfileService.selectUserProfile(leaderEmail);
+	    	user = userProfileService.selectUserProfile(email);
 	    	user.setCrUser(leaderUser.getChineseName());
 	    	user.setUserStamp(leaderUser.getChineseName());
-	    	user.setEmail(email);
 	    	user.setEnglishName(englishName);
 	    	user.setTeam(new Integer(team));
 	    	user.setPhone(phone);
 	    	user.setDateStamp(sysDate);
 	    	user.setChineseName(chineseName);
-	    	user.setUserId(userId);
 	    	count =  userProfileService.updateUserProfile(user);
 
 	    	if (count > 0) {
@@ -171,6 +150,8 @@ public class UserProfileController extends BaseController{
 		JSONObject obj = new JSONObject();
 		String email = map.get("userEmail") != null ? map.get("userEmail").trim() : null ;
 		logger.debug("email : " + email);
+		String leaderEmail = map.get("leaderEmail") != null ? map.get("leaderEmail").trim() : null ;
+		logger.debug("leaderEmail : " + leaderEmail);
 		String chineseName = map.get("chineseName")!= null ? map.get("chineseName").trim() : null  ;
 		logger.debug("chineseName : " + chineseName);
 		String englishName = map.get("englishName")!= null ? map.get("englishName").trim() : null  ;
@@ -179,15 +160,12 @@ public class UserProfileController extends BaseController{
 		logger.debug("phone : " + phone);
 		String team = map.get("team")!= null ? map.get("team").trim() : null  ;
 		logger.debug("team : " + team);
-		String userId = map.get("userId")!= null ? map.get("userId").trim() : null  ;
-		logger.debug("userId : " + userId);
 		UserProfile user = new UserProfile() ;
 		UserProfile leaderUser = null;
-		UserRefence userRefence = null ;
 		int count = 0 ;
 		Date sysDate = new Date();
 	    try {
-	    	leaderUser = userProfileService.selectUserProfile(userId);
+	    	leaderUser = userProfileService.selectUserProfile(leaderEmail);
 	    	user.setCrUser(leaderUser.getChineseName());
 	    	user.setUserStamp(leaderUser.getChineseName());
 	    	user.setEmail(email);
@@ -198,15 +176,9 @@ public class UserProfileController extends BaseController{
 	    	user.setCrDate(sysDate);
 	    	user.setDateStamp(sysDate);
 	    	user.setChineseName(chineseName);
-	    	user.setLeaderEmail(leaderUser.getEmail());
-	    	userRefence = new UserRefence();
-	    	userRefence.setCrDate(sysDate);
-	    	userRefence.setUserStamp(leaderUser.getChineseName());
-	    	userRefence.setReferrerId(leaderUser.getUserId());
-	    	userRefence.setDateStamp(sysDate);
-	    	userRefence.setCrUser(leaderUser.getChineseName());
-	    	count =  userProfileService.insertUserProfile(user,userRefence);
-
+	    	user.setRoleId(1);
+	    	user.setLeaderEmail(leaderEmail);
+	    	count = userProfileService.insertUserProfile(user);
 	    	if (count > 0) {
 	    		obj.put("success","success");
 	    		obj.put("errorMessage","");
@@ -226,7 +198,7 @@ public class UserProfileController extends BaseController{
 	}
 	
 	@RequestMapping(value="/queryUserProfile", method = RequestMethod.POST)
-	public ModelAndView queryUserProfile(@RequestParam(value="email",required=false) String email ,@RequestParam(value="userId",required=false) String userId,@RequestParam(value="chineseName",required=false) String chineseName , HttpServletRequest request){
+	public ModelAndView queryUserProfile(@RequestParam(value="email",required=false) String email , @RequestParam(value="chineseName",required=false) String chineseName , HttpServletRequest request){
 		logger.debug("queryUserProfile start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<UserProfile> list = null ;
@@ -237,11 +209,9 @@ public class UserProfileController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			list = userProfileService.selectUserProfileList(userId, chineseName);
+			list = userProfileService.selectUserProfileList(email, chineseName);
 			map.put("list", list);
 			map.put("email", email);
-			map.put("userId", userId);
-			map.put("userId", userId);
 			if (list != null && !list.isEmpty()) {
 				map.put("userSize", list.size());
 			}else {
@@ -270,7 +240,7 @@ public class UserProfileController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			list = userProfileService.selectUserProfileList(leaderUserId, parentChineseName);
+			list = userProfileService.selectUserProfileList(leaderEmail, null);
 			map.put("list", list);
 			map.put("email", leaderEmail);
 			map.put("userId", leaderUserId);
@@ -302,7 +272,7 @@ public class UserProfileController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			list = userProfileService.selectUserProfileList(leaderUserId, parentChineseName);
+			list = userProfileService.selectUserProfileList(leaderEmail, null);
 			map.put("list", list);
 			map.put("email", leaderEmail);
 			map.put("userId", leaderUserId);

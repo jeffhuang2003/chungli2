@@ -26,12 +26,10 @@ import com.chungli.dto.Brokerage;
 import com.chungli.dto.EaProgram;
 import com.chungli.dto.UserLive;
 import com.chungli.dto.UserProfile;
-import com.chungli.dto.UserRefence;
 import com.chungli.service.BrokService;
 import com.chungli.service.EaService;
 import com.chungli.service.UserLiveService;
 import com.chungli.service.UserProfileService;
-import com.chungli.service.UserRefenceService;
 
 
 @Controller
@@ -39,8 +37,6 @@ public class UserLiveController extends BaseController{
 	private static Logger logger = Logger.getLogger(UserLiveController.class);
 	@Autowired
 	private UserProfileService userProfileService;
-	@Autowired
-	private UserRefenceService userRefenceService;
 	
 	@Autowired
 	private UserLiveService userLiveService;
@@ -56,7 +52,6 @@ public class UserLiveController extends BaseController{
 		logger.debug("updateUserLiveInit start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
 		UserProfile userProfile = null ;
-		UserRefence userRefence = null ;
 		try {
 			String url = null ;
 			url = checkSession(request);
@@ -65,14 +60,13 @@ public class UserLiveController extends BaseController{
 			}
 			
 			userProfile = userProfileService.selectUserProfile(userId);
-			userRefence = userRefenceService.selectUserRefence(userId) ;
-			map.put("userId", userProfile.getUserId());
+			map.put("userId", userProfile.getEmail());
 			map.put("englishName", userProfile.getEnglishName());
 			map.put("phone", userProfile.getPhone());
 			map.put("email", userProfile.getEmail());
 			map.put("team", userProfile.getTeam());
-			if (userRefence !=null) {
-				map.put("leaderUserId", userRefence.getReferrerId());
+			if (userProfile !=null) {
+				map.put("leaderUserId", userProfile.getLeaderEmail());
 			} else {
 				map.put("leaderUserId", leaderUserId);
 			}
@@ -154,7 +148,6 @@ public class UserLiveController extends BaseController{
 	    	user.setCrDate(sysDate);
 	    	user.setDateStamp(sysDate);
 	    	user.setChineseName(chineseName);
-	    	user.setUserId(userId);
 	    	count =  userProfileService.updateUserProfile(user);
 
 	    	if (count > 0) {
@@ -204,6 +197,8 @@ public class UserLiveController extends BaseController{
 	    	list = userProfileService.selectUserProfileList(leaderUserId, null);
 	    	if (list != null && !list.isEmpty()) {
 	    		userProfile = list.get(0);
+	    	} else {
+	    		throw new Exception("新增失敗");
 	    	}
 	    	userLive.setUserId(userId);
 	    	userLive.setUserLiveId(userLiveId);

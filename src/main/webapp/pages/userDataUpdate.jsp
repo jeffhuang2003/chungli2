@@ -67,41 +67,6 @@ $(document).ready(function(){
     });
 });
 
-function checkEmail(obj){
-	  var re1 =  /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/; 
-	   if (re1.test($(obj).val()) != true) {
-	   	  alert("你的電子郵件格式不合！");
-	      $(obj).focus();   
-	      return false ;
-	   }
-       if ($("#oldEmail").val() == $(obj).val()) {
-    	   return false ;
-       }
-	   //email被修改
-	   var data = {"email":$(obj).val()};
-	   $.ajax({
-           type : "post",
-           url : '/chungli2/checkEmail',
-           cache : false,
-           data :  $.toJSON(data),
-           dataType : 'json',
-           contentType : "application/json",
-           success : function(result) {
-           	if(result.success=="success"){
-           	 alert("檢查結果 : "+ result.errorMessage);;
-           	} else {
-           	 alert("檢查結果 : "+ result.errorMessage);;
-           	 $(obj).focus();  	
-           	}
-           },
-
-           error : function(result) {
-        	 alert("檢查結果 : "+ result.errorMessage);;  
-        	 $(obj).focus();  
-           }
-
-       });                              
-}
 </script>
 </head>
 
@@ -135,7 +100,7 @@ function checkEmail(obj){
                 <td  style="width:200px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:100px" align="left"><font size="3">帳號(E-Mail)</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="email" name="email" class="validate[required,maxSize[50]] text-input" value='${email}' onblur="checkEmail(this)"/></td>
+                <td style="width:100px" align="left"><font size="3">帳號(E-Mail)</font></td><td style="width:200px" align="left"><input type="text" style="width:150px;background-color:#D3D3D3;color: red" id="email" name="email" class="validate[required,maxSize[50]] text-input" value='${email}' readonly="readonly"/></td>
             </tr>
             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>

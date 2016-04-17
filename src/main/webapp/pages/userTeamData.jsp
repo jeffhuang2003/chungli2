@@ -10,7 +10,6 @@
 <script>
 $(document).ready(function(){
  	//jQuery('#formLogin').validationEngine();//'attach', {promptPosition : "center", autoPositionUpdate : true});
-	 var datepicker_CurrentInput;
  	$.fn.serializeObject = function(){  
         var o = {};  
         var a = this.serializeArray();  
@@ -48,7 +47,7 @@ $(document).ready(function(){
     		return ;
         } else {
         	 $("#formUser").attr("action","/chungli2/queryUserTeamProfile");
-             if ($("#userId").val() == $("#parentUserId").val()) {
+             if ($("#email").val() == $("#email").val()) {
              	$("#control").val("0");
              } else {
              	$("#control").val("1");
@@ -66,7 +65,7 @@ $(document).ready(function(){
     });
     $("#btnLeader").click(function(){
         $("#formUser").attr("action","/chungli2/selectLeaderUserTeam");
-        if ($("#parentUserId").val() == $("#leaderUserId").val()) {
+        if ($("#parentEmail").val() == $("#leaderEmail").val()) {
         	$("#control").val("0");
         }  else {
         	 $("#control").val("2");
@@ -175,29 +174,11 @@ function vailDate(startDate , endDate){
 	
 }
 
-function selectChildUser(userId,email){
+function selectChildUser(email){
 	$('#formChildUser').attr("action" ,"/chungli2/selectChildUserTeam");
-	$("#formChildUser").append("<input type=hidden name='userId' id='userId' value='" + userId +"'></input>");
 	$("#formChildUser").append("<input type=hidden name='email' id='email' value='" + email +"'></input>");
-	$("#formChildUser").append("<input type=hidden name='leaderUserId' id='leaderUserId3' value='" + $("#leaderUserId").val() +"'></input>");
 	$("#formChildUser").append("<input type=hidden name='leaderEmail'  id='leaderEmail3'  value='" + $("#leaderEmail").val()  +"'></input>");
-	$("#formChildUser").append("<input type=hidden name='parentUserId' id='parentUserId3' value='" + $("#parentUserId").val() +"'></input>");
 	$("#formChildUser").append("<input type=hidden name='parentEmail'  id='parentEmail3'  value='" + $("#parentEmail").val()  +"'></input>");
-// alert("l : " + $("#leaderUserId3").val());
-// alert("p : " + $("#parentUserId3").val());
-// alert("u : " + $("#userId").val());
-
-// 	if ($("#leaderUserId3").val() != $("#userId").val()) {
-// 		$("#formChildUser").append("<input type=hidden name='control'  	  id='control'  value='0'></input>"); 
-// 	} else {
-// 	    if ($("#userId").val() == $("#parentUserId3").val()) {
-// 	    	$("#formChildUser").append("<input type=hidden name='control'  	  id='control'  value='0'></input>"); 
-// 	    } else {
-// 	    	$("#formChildUser").append("<input type=hidden name='control'  	  id='control'  value='4'></input>"); 
-// 	    }
-		
-// 	}	
-	
 	
 	$('#formChildUser').submit();
 }
@@ -237,7 +218,9 @@ function selectChildUser(userId,email){
               </c:if>
               <c:if test="${control  != 0 }">
 	                <td width="400px" align="center" colspan="2" nowrap="nowrap">
-	                	<input type="button" id="btnSelect" value="會員查詢" width="100px" />
+	                    <c:if test="${userSize  != 0 }">
+	                	  <input type="button" id="btnSelect" value="會員查詢" width="100px" />
+	                	</c:if>
 	                	<input type="button" id="btnLeader" value="回上層查詢" width="100px" />
 	                	<input type="button" id="btnParent" value="最上層查詢" width="100px" />
 	                </td>
@@ -296,10 +279,8 @@ function selectChildUser(userId,email){
 				       </td>
  					   <td><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss"  value="${user.dateStamp}"/></td>
 					    <td>
-					    <c:if test="${status.count != 1 }">
-							<input type="button" name="btnSelectChild" id="btnSelectChild" value="子會員查詢"  onclick = "selectChildUser('${user.userId}','${user.email}')" size="30px" />
+							<input type="button" name="btnSelectChild" id="btnSelectChild" value="子會員查詢"  onclick = "selectChildUser('${user.email}')" size="30px" />
 <%-- 	                        <input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userDelete',this,'${user.userId}')"  size="30px" /> --%>
-						</c:if>
 						</td>
 				  </tr>
 				 </c:forEach>
@@ -314,9 +295,7 @@ function selectChildUser(userId,email){
         </table>
         </div>
  	</center>
- 	 <input type="hidden" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}"/>
      <input type="hidden" id="leaderEmail" name="leaderEmail"  value="${leaderEmail}" />
-     <input type="hidden" id="parentUserId" name="parentUserId"  value="${parentUserId}"/>
      <input type="hidden" id="parentEmail" name="parentEmail"  value="${parentEmail}" />
      <input type="hidden" id="control" name="control" value="${control}"/>
 </form>

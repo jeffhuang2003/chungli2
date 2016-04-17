@@ -19,10 +19,10 @@ import com.chungli.controller.LoginController;
 import com.chungli.dto.UserProfile;
 import com.chungli.dto.UserProfileExample;
 import com.chungli.dto.UserProfileExample.Criteria;
-import com.chungli.dto.UserRefence;
+
 import com.chungli.mapper.UserProfileExtraMapper;
 import com.chungli.mapper.UserProfileMapper;
-import com.chungli.mapper.UserRefenceMapper;
+
 
 
 @Service
@@ -32,8 +32,7 @@ public class UserProfileService {
 	private UserProfileMapper userMapper ;
 	@Autowired
 	private UserProfileExtraMapper userProfileExtraMapper ;
-	@Autowired
-	private UserRefenceMapper userRefenceMapper ;
+
 	
 	@Transactional(rollbackFor=Exception.class)
 	public UserProfile selectUserProfile(String userId) throws Exception{
@@ -43,21 +42,13 @@ public class UserProfileService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	public int insertUserProfile(UserProfile user,UserRefence userRefence) throws Exception{
+	public int insertUserProfile(UserProfile user) throws Exception{
 		int count = 0 ;
-		String insertUserId  = null ;
-		String qryUserId = "%" +  userRefence.getReferrerId().substring(0, 3) + "%"  ;
-		count = userProfileExtraMapper.selectUserProfileCount(qryUserId) ;
-		count ++ ;
-		insertUserId = userRefence.getReferrerId().substring(0, 3) + String.format("%012d", count);
-		user.setUserId(insertUserId);
-		userRefence.setUserId(insertUserId);
 		count = 0 ;
 		count = userMapper.insertSelective(user);
 		if (count < 0) {
 			throw new Exception();
 		}
-		count = userRefenceMapper.insertSelective(userRefence) ;
 		return count ;
 	}
 	

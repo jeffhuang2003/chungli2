@@ -85,7 +85,6 @@ $(document).ready(function(){
 function updateInit(obj,userId){
 	$('#formUserUpdate').attr("action" ,"/chungli2/updateUserProfileInit");
 	$('#formUserUpdate').append("<input type=hidden name='userId' id='userId' value='" + userId +"'></input>");
-	$("#chineseName").val($("#chineseName").val());
 	$('#formUserUpdate').submit();
 }
 
@@ -174,10 +173,8 @@ function updateInit(obj,userId){
 				       </td>
  					   <td><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss"  value="${user.dateStamp}"/></td>
 					    <td>
-					    <c:if test="${status.count != 1 }">
-							<input type="button" name="btnUpdate" id="btnUpdate" value="編輯" title="update" onclick = "updateInit(this,'${user.userId}')" size="30px" />
+							<input type="button" name="btnUpdate" id="btnUpdate" value="編輯" title="update" onclick = "updateInit(this,'${user.email}')" size="30px" />
 <%-- 	                        <input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userDelete',this,'${user.userId}')"  size="30px" /> --%>
-						</c:if>
 						</td>
 				  </tr>
 				 </c:forEach>

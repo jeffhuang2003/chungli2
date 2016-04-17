@@ -111,10 +111,7 @@ $(document).ready(function(){
 
     $("#tab3").click(function(){
     	$("#formUserInit").attr("action","/chungli2/userTeamInit");
-    	$("#formUserInit").append("<input type=hidden name='leaderUserId' id='leaderUserId' value='" + $("#userId").val() +"'></input>");
-    	$("#formUserInit").append("<input type=hidden name='leaderEmail'  id='leaderEmail'  value='" + $("#email").val()  +"'></input>");
-    	$("#formUserInit").append("<input type=hidden name='parentUserId' id='parentUserId' value='" + $("#userId").val() +"'></input>");
-    	$("#formUserInit").append("<input type=hidden name='parentEmail'  id='parentEmail'  value='" + $("#email").val()  +"'></input>");
+    	$("#formUserInit").append("<input type=hidden name='userEmail'  id='userEmail'  value='" + $("#email").val()  +"'></input>");
     	$("#formUserInit").append("<input type=hidden name='control'  	  id='control'  value='0'></input>"); 
         $("#formUserInit").submit();
     });
