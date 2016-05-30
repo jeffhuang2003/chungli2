@@ -13,4 +13,6 @@ public interface UserProfileExtraMapper {
 	
 	public List<UserProfile> selectUserTeamProfileList(Map<String ,String> map);
 	public UserProfile selectUserProfileByLeader(String userId);
+	
+	public List<UserProfile> selectTotalList(String userId);
 }

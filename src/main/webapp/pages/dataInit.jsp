@@ -89,7 +89,6 @@ div.tab_container .tab_content h2 {
 <script>
 $(document).ready(function(){
  	//jQuery('#formLogin').validationEngine();//'attach', {promptPosition : "center", autoPositionUpdate : true});
-
  	$('ul.tabs li').click(function() {
 		var $this = $(this),
 			_clickTab = $this.find('a').attr('href');
@@ -115,7 +114,22 @@ $(document).ready(function(){
     	$("#formUserInit").append("<input type=hidden name='control'  	  id='control'  value='0'></input>"); 
         $("#formUserInit").submit();
     });
-    
+	if($("#hiddenTag4").text() =="1"){
+	 	$("#tab4").click(function(){
+	    	$("#formUserInit").attr("action","/chungli2/downloadCSVInit");
+	    	$("#formUserInit").append("<input type=hidden name='userEmail'  id='userEmail'  value='" + $("#email").val()  +"'></input>");
+	        $("#formUserInit").submit();
+	    });
+	}
+   
+
+    $("#tab6").click(function(){
+    	$("#formUserInit").attr("action","/chungli2/systemInit");
+    	$("#formUserInit").append("<input type=hidden name='userEmail'  id='userEmail'  value='" + $("#email").val()  +"'></input>");
+        $("#formUserInit").submit();
+    });
+
+    $("#hiddenDiv").hide();
 });
 
 </script>
@@ -126,22 +140,35 @@ $(document).ready(function(){
 
 <form id="formLogin" action="" method="post" target="_self" >
 	<left>
-        <table border="0" class="tblInTD" style="width:700px;" >
+        <table border="0" class="tblInTD" style="width:1100px;" >
             <tr>
-				<td>
+				<td style="width:800px;" align="left">
 				    <div class="abgne_tab">
-                          <ul class="tabs" style="width: 700px">
+                          <ul class="tabs" style="width: 800px">
                             <li><a id='tab1' href="#tab1">會員資料</a></li>
                             <li><a id='tab2'href="#tab2">會員真倉資料</a></li>
                             <li><a id='tab3'href="#tab2">查詢</a></li>
-                            <li><a id='tab4'href="#tab3">程式下載</a></li>
-                            <li><a id='tab5'href="#tab4">系統</a></li>
+                            <c:if test="${tag4 =='1'}">
+                               <li><a id='tab4'href="#tab4">封包及空機程式</a></li>
+                            </c:if>
+                            <li><a id='tab6'href="#tab4">系統</a></li>
                           </ul>
                    </div>       
+				</td>
+				<td align="right" style="width:100px;"> 
+				</td>
+				<td align="right" style="width:100px;">
+				       
+				</td>
+				<td align="right" style="width:300px;">
+				   	  歡迎<span style="color: red">${email}<a href="/chungli2/logOut" id="logOut">登出</a></span>  
 				</td>
             </tr>
         </table>
       </left>
+      <div id="hiddenDiv">
+      <span id="hiddenTag4">${tag4}</span>
+      </div>
 </form>
 <form id="formUserInit" action="/chungli2/userDataInit" method="post" target="_self" >
          <input type="hidden" id="userId" name="userId"  value="${userId}"/>

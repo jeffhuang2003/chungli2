@@ -39,14 +39,12 @@ $(document).ready(function(){
 	 $("#queryListResult").show();
 	}
 
-    $("#btnSelect").click(function(){
-        $("#formUser").attr("action","/chungli2/queryUserLiveProfile");
+    $("#btnQry").click(function(){
         $("#formUser").submit();
      });
 
     $("#btnInsert").click(function(){
         $("#formUserLiveInsert").attr("action","/chungli2/insertUserLiveInit");
-        $('#formUserLiveInsert').append("<input type=hidden name='userId' id='userId1' value='" +$("#userId").val() +"'></input>");
     	$('#formUserLiveInsert').append("<input type=hidden name='leaderUserId' id='leaderUserId1' value='" + $("#leaderUserId").val() +"'></input>");
     	$('#formUserLiveInsert').append("<input type=hidden name='email' id='email1' value='" + $("#email").val() +"'></input>");
         $("#formUserLiveInsert").submit();
@@ -87,31 +85,34 @@ $(document).ready(function(){
 
 
 function selectLiveUpdateInit(obj,userId,userLiveId){
-	$('#formUserLive').attr("action" ,"/chungli2/selectLiveUpdateInit");
+	$('#formUserLive').attr("action" ,"/chungli2/updateUserLiveInit");
 	$('#formUserLive').append("<input type=hidden name='userId' id='userId' value='" + userId +"'></input>");
-	$('#formUserLive').append("<input type=hidden name='userLeiveId' id='userLiveId' value='" + userLiveId +"'></input>");
+	$('#formUserLive').append("<input type=hidden name='userLiveId' id='userLiveId' value='" + userLiveId +"'></input>");
 	$('#formUserLive').append("<input type=hidden name='chineseName' id='chineseName' value='" +$("#chineseName").val() +"'></input>");
 	$('#formUserLive').submit();
 }
 
-function delRow(button,userId,userLiveId){
-	var data={"userId" : userId,
-			  "userLiveId" : userLiveId
+function delRow(delUrl,button,userId,userLiveId){
+	var data1={"delUserId" : userId,
+			  "delUserLiveId" : userLiveId
 			 };
 	if(window.confirm("確定刪除此筆資料?")){
 		$.ajax({
             type : "post",
-            url : "/chungli2/deleteUserLive",
+            url : delUrl,
             cache : false,
-            data : $.toJSON(data),
+            data : $.toJSON(data1),
             dataType : 'json',
             contentType : "application/json",
             success : function(result) {
             	if(result.success=="success"){
-            		var rowid=button.parentNode.parentNode.rowIndex;
+             		var rowid=button.parentNode.parentNode.rowIndex;
 	    	    	$("#tabelResult").jqGrid('delRowData', rowid);
 	    	    	alert("刪除成功 ");
-                } else {
+                } else if (result.success=="timeout") {
+  	            		alert("新增失敗  :  "+ result.errorMessage);
+  	            		location.href='/chungli2/logOut';
+  	            } else {
             		alert("刪除失敗  :  "+ result.errorMessage);
 
             	}
@@ -131,11 +132,57 @@ function delRow(button,userId,userLiveId){
 
 <%@ include file="/pages/dataInit.jsp"%>
 
-<form id="formUser" action="" method="post" target="_self" >
+<form id="formUser" action="selectUserLiveQry" method="post" target="_self" >
 	<center>
-            <table border="0" class="tblInTD" style="width:850px;">
+            <table border="0" class="tblInTD" style="width:900px;">
+             
+            <tr>
+            	<th style="width:200x">帳&nbsp;&nbsp;號(E-Mail)</th> 
+                <td style="width:200x" align="center"><input type="text" style="width:200px;color:red;background-color:#D3D3D3" id="email" name="email"  value="${email}" readonly="readonly"/></td>
+                <th style="width:200x">&nbsp;</th>
+                <td style="width:200x" align="left">&nbsp;</td>
+            </tr> 
+            <tr>
+            	<th style="width:200x">EA智能  :</th>
+                <td style="width:200x" align="center">
+                <select id="eaProgram" name="eaProgram" style="width:100x">
+                    <option selected="selected" value="">請選擇</option>
+                    <c:forEach items="${eaList}" var="eaProgram2">
+                     <c:if test="${eaProgram == eaProgram2.eaId}">
+					     <option  value="${eaProgram2.eaId}" selected>${eaProgram2.eaName}</option>    
+					 </c:if> 
+					  <c:if test="${eaProgram != eaProgram2.eaId}">
+					     <option  value="${eaProgram2.eaId}">${eaProgram2.eaName}</option>    
+					 </c:if>             
+                   </c:forEach>
+                </select>
+                </td>
+                <th style="width:200x">&nbsp;</th>
+                <td style="width:200x" align="left">&nbsp;</td>
+            </tr> 
              <tr>
-                <td width="400px" align="right"><input type="button" style="width:150px;" id="btnInsert" name="btnInsert"  value="會員真倉資料新增"/></td>
+				<th style="width:200x">券商 :</th>
+                <td style="width:200x" align="center">
+                <select id="brokerAge" name="brokerAge" style="width:100x">
+                    <option selected="selected" value="">請選擇</option>
+                    <c:forEach items="${brokList}" var="brokerAge2">
+                     <c:if test="${brokerAge == brokerAge2.brokId}">
+                          <option  value="${brokerAge2.brokId}" selected>${brokerAge2.brokName}</option>   
+                     </c:if>
+                     <c:if test="${brokerAge != brokerAge2.brokId}">
+                          <option  value="${brokerAge2.brokId}" >${brokerAge2.brokName}</option>   
+                     </c:if>         
+                   </c:forEach>
+                </select>
+                </td>
+                <th style="width:200x">&nbsp;</th>
+                <td style="width:200x" align="center">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="width:800x" colspan="4" nowrap="nowrap" align="center">
+	                <input type="button" style="width:150px;" id="btnQry" name="btnQry"  value="會員真倉資料查詢"/>
+	                <input type="button" style="width:150px;" id="btnInsert" name="btnInsert"  value="會員真倉資料新增"/>
+                </td>
             </tr>     
             <tr>
                 <td width="200px"><input type="hidden" width="200px" id="userId" name="userId"  value="${userId}"/></td>
@@ -217,11 +264,17 @@ function delRow(button,userId,userLiveId){
 							<c:if test="${userLive.status == 5}">
 							   	已上線
 							</c:if>
+							<c:if test="${userLive.status == 6}">
+							   	未啟用
+							</c:if>
+							<c:if test="${userLive.status == 7}">
+							   	已啟用
+							</c:if>						
 				       </td>
  					   <td><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss"  value="${userLive.dateStamp}"/></td>
 					    <td>
 							<input type="button" name="btnUpdate" id="btnUpdate" value="編輯" title="update" onclick = "selectLiveUpdateInit(this,'${userLive.userId}','${userLive.userLiveId}')" size="30px" />
-							<input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userLiveDelete',this,'${userLive.userId}','${userLive.userLiveId}')"  size="30px" /> --%>
+							<input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/deleteUserLive',this,'${userLive.userId}','${userLive.userLiveId}')"  size="30px" />
 						</td>
 				  </tr>
 				 </c:forEach>
@@ -238,11 +291,12 @@ function delRow(button,userId,userLiveId){
  	</center>
  	<input type="hidden" style="width:200px" id="chineseName" name="chineseName" value="${chineseName}"/>
  	<input type="hidden" style="width:200px" id="leaderEmail" name="leaderEmail" value="${leaderEmail}"/>
- 	<input type="hidden" style="width:200px" id="leaderUserId" name="leaderUserId" value="${leaderUserId}"/>
 </form>
 </body>
 <form id="formUserLive" action="" method="post" target="_self" >
 </form>
 <form id="formUserLiveInsert" action="" method="post" target="_self" >
+</form>
+<form id="formUserLiveDel" action="" method="post" target="_self" >
 </form>
 </html>

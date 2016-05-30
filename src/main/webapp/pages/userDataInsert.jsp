@@ -83,6 +83,10 @@ function checkEmail(){
       	            	if(result.success=="success"){
       	            		$("#btnInsert").attr("disabled",true);
       	            		alert("新增成功 ");
+      	            	} else if (result.success=="timeout") {
+      	            		$("#btnInsert").attr("disabled",false);
+      	            		alert("新增失敗  :  "+ result.errorMessage);
+      	            		location.href='/chungli2/logOut';
       	            	} else {
       	            		$("#btnInsert").attr("disabled",false);
       	            		alert("新增失敗  :  "+ result.errorMessage);;

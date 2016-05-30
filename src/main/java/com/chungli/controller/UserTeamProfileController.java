@@ -76,6 +76,7 @@ public class UserTeamProfileController extends BaseController {
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserTeamProfile error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -120,6 +121,7 @@ public class UserTeamProfileController extends BaseController {
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("selectLeaderUserTeam error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -161,6 +163,7 @@ public class UserTeamProfileController extends BaseController {
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("selectParentUserTeam error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -201,6 +204,7 @@ public class UserTeamProfileController extends BaseController {
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("selectChildUserTeam error : " + e.getMessage());
 			logger.debug(getTrace(e));

@@ -15,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
+
 import com.chungli.controller.LoginController;
 import com.chungli.dto.UserProfile;
 import com.chungli.dto.UserProfileExample;
 import com.chungli.dto.UserProfileExample.Criteria;
-
 import com.chungli.mapper.UserProfileExtraMapper;
 import com.chungli.mapper.UserProfileMapper;
 
@@ -69,9 +69,8 @@ public class UserProfileService {
 		userList = userProfileExtraMapper.selectUserProfileList(userId);
 		if (chineseName != null && !"".equals(chineseName)) {
 			for (UserProfile userProfile : userList) {
-				if (chineseName.trim().equals(userProfile.getChineseName()) || chineseName.equals(userProfile.getEnglishName())) {
+				if (chineseName.trim().equals(userProfile.getChineseName()) || chineseName.equals(userProfile.getChineseName())) {
 					userFinalList.add(userProfile) ;
-					break ;
 				}
 			}
 			return userFinalList ;
@@ -82,7 +81,9 @@ public class UserProfileService {
 	
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteUserProfile(String userId) throws Exception{
-		return userMapper.deleteByPrimaryKey(userId) ;
+		int count = 0 ;
+		count = userMapper.deleteByPrimaryKey(userId) ;
+		return count ;
 	}
 
 	@Transactional(rollbackFor=Exception.class)
@@ -91,6 +92,32 @@ public class UserProfileService {
 		UserProfileExample example = new UserProfileExample();
 		example.createCriteria().andEmailEqualTo(email);
 		count = userMapper.countByExample(example) ;
+		return count ;
+	}
+	
+	@Transactional(rollbackFor=Exception.class)
+	public List<UserProfile> selectTotalList(String userId,String chineseName) throws Exception{
+		List<UserProfile> userList  = null ;
+		List<UserProfile> userFinalList  = new ArrayList<UserProfile>() ;
+		userList = userProfileExtraMapper.selectTotalList(userId);
+		if (chineseName != null && !"".equals(chineseName)) {
+			for (UserProfile userProfile : userList) {
+				if (chineseName.trim().equals(userProfile.getChineseName()) || chineseName.equals(userProfile.getChineseName())) {
+					userFinalList.add(userProfile) ;
+				}
+			}
+			return userFinalList ;
+		}
+		
+		return userList ;
+	}
+	
+	@Transactional(rollbackFor=Exception.class)
+	public int selectChildListCount(String userId) throws Exception{
+		int count  = 0 ;
+        UserProfileExample example = new UserProfileExample();
+        example.createCriteria().andLeaderEmailEqualTo(userId) ;
+        count = userMapper.countByExample(example) ;
 		return count ;
 	}
 }

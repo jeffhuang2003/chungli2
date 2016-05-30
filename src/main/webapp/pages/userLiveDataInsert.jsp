@@ -38,7 +38,7 @@ $(document).ready(function(){
     });
     //離開
     $("#btnLeave").click(function(){
-    	$("#formQueryUser").attr("action","/chungli2/queryUserLiveByLeaderInsert");
+    	$("#formQueryUser").attr("action","/chungli2/selectUserLivetInit");
     	$("#formQueryUser").submit();
     });
     
@@ -94,6 +94,10 @@ function checkUserLiveId(){
       	            success : function(result) {
       	            	if(result.success=="success"){
       	            		alert("新增成功 ");
+      	            	} else if (result.success=="timeout") {
+                		    $("#btnInsert").attr("disabled",false);
+      	            		alert("新增失敗  :  "+ result.errorMessage);
+      	            		location.href='/chungli2/logOut';
       	            	} else {
       	            		$("#btnInsert").attr("disabled",false);
       	            		alert("新增失敗  :  "+ result.errorMessage);;
@@ -133,23 +137,15 @@ function checkUserLiveId(){
          <legend>新增</legend>
          <table border="0" class="tblInTD" style="width:400px;">
             <tr>
-                <td  style="width:100px" align="left"><font size="3">真倉帳號&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="userLiveId" name="userLiveId" class="validate[required,maxSize[10]] text-input" /></td>
+                <td  style="width:100px" align="left"><font size="3">帳號&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" id="email" name="email"   value="${email}" readonly="readonly" style="width:150px;color:red;background-color:#D3D3D3;"/></td>
             </tr>
-             <tr>
+            <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:100px" align="left"><font size="3">智能程式代號&nbsp;&nbsp;</font></td>
-                <td style="width:200px" align="left">     
-                   <select name="eaId" id="eaId"  style="width : 150px;">
-                     <option value="-1" selected>---請選擇---</option>
-                     <c:forEach items="${eaList}" var="eaProgram" varStatus="status">
-                              <option value="${eaProgram.eaId}">${eaProgram.eaName}</option>
-                     </c:forEach>
-                   </select>
-                </td>
+                <td  style="width:100px" align="left"><font size="3">真倉帳號&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="userLiveId" name="userLiveId" class="validate[required,maxSize[10]] text-input" /></td>
             </tr>
-            <tr>
+             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
@@ -159,6 +155,20 @@ function checkUserLiveId(){
                      <option value="-1" selected>---請選擇---</option>
                      <c:forEach items="${brokList}" var="brokAge" varStatus="status">
                               <option value="${brokAge.brokId}">${brokAge.brokName}</option>
+                     </c:forEach>
+                   </select>
+                </td>
+            </tr>
+            <tr>
+                <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="width:100px" align="left"><font size="3">智能程式代號&nbsp;&nbsp;</font></td>
+                <td style="width:200px" align="left">     
+                   <select name="eaId" id="eaId"  style="width : 150px;">
+                     <option value="-1" selected>---請選擇---</option>
+                     <c:forEach items="${eaList}" var="eaProgram" varStatus="status">
+                              <option value="${eaProgram.eaId}">${eaProgram.eaName}</option>
                      </c:forEach>
                    </select>
                 </td>
@@ -176,6 +186,8 @@ function checkUserLiveId(){
                         <option value="3">封包中</option>
                         <option value="4">模擬盤</option>
                         <option value="5">已上線</option>
+                        <option value="6">未啟用</option>
+                        <option value="7">已啟用</option>
                     	</select>
                 </td>
             </tr>
@@ -199,21 +211,11 @@ function checkUserLiveId(){
                 </td>
             </tr>
         </table>
-        
-            <table border="0" class="tblInTD" style="width:600px;">
-            <tr>
-                <td style="width:200px"><input type="hidden" style="width:200px" id="userId" name="userId"  value="${userId}" readonly="readonly" style="width:150px;background-color:black;"/></td>
-            </tr>
-        </table>
    </fieldset>
      </center>  
-     <input type="hidden" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px;background-color:black;"/> 
      <input type="hidden" id="resultValue" name="resultValue"  value="" /> 
 </form>
 <form id="formQueryUser" action="" method="post" target="_self" >
-   	<input type="hidden" style="width:200px" id="leaderUserId1" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px"/>
-	<input type="hidden" style="width:200px" id="leaderEmail1" name="leaderEmail"  value="${leaderEmail}" readonly="readonly" style="width:150px"/>
-	<input type="hidden" style="width:200px" id="userId1" name="userId"  value="${userId}" readonly="readonly" style="width:150px"/>
 	<input type="hidden" style="width:200px" id="email1" name="email"  value="${email}" readonly="readonly" style="width:150px"/>
 </form>
 </body>

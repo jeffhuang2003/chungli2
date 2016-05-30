@@ -66,7 +66,7 @@
       <columnOverride column="UserStamp" property="userStamp" />
     </table>
      <table  tableName="UserPay" domainObjectName="UserPay">
-      <columnOverride column="UserPayID" property="userPayID" />
+      <columnOverride column="InvoiceNumber" property="invoiceNumber" />
       <columnOverride column="UserId" property="userId" />
       <columnOverride column="EaId" property="eaId" />
       <columnOverride column="EaPayAmount" property="eaPayAmount" />
@@ -80,6 +80,17 @@
      <table  tableName="Role" domainObjectName="Role">
       <columnOverride column="RoleId" property="roleId" />
       <columnOverride column="RoleName" property="roleName" />
+      <columnOverride column="CrDate" property="crDate" />
+      <columnOverride column="CrUser" property="crUser" />
+      <columnOverride column="DateStamp" property="dateStamp" />
+      <columnOverride column="UserStamp" property="userStamp" />
+    </table>
+     <table  tableName="DownloadHistory" domainObjectName="DownloadHistory">
+      <columnOverride column="Email" property="email" />
+      <columnOverride column="UserLiveId" property="userLiveId" />
+       <columnOverride column="EaId" property="eaId" />
+      <columnOverride column="StartTime" property="startTime" />
+       <columnOverride column="EndTime" property="endTime" />
       <columnOverride column="CrDate" property="crDate" />
       <columnOverride column="CrUser" property="crUser" />
       <columnOverride column="DateStamp" property="dateStamp" />

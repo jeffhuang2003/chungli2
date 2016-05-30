@@ -59,9 +59,9 @@ $(document).ready(function(){
 				    {name : 'engName',index : 'engName',width: 130, sortable : false},
 				    {name : 'phone',index : 'phone',width: 100, sortable : false},
 				    {name : 'email',index : 'email',width: 150, sortable : false},
-				    {name : 'team',index : 'team',width: 150, sortable : false},
-				    {name : 'userStamp',index : 'userStamp',width: 150, sortable : false},
-				    {name : 'rButton',index : 'rButton', sortable : false,hidden:false, width: 50}
+				    {name : 'team',index : 'team',width: 120, sortable : false},
+				    {name : 'userStamp',index : 'userStamp',width: 120, sortable : false},
+				    {name : 'rButton',index : 'rButton', sortable : false,hidden:false, width: 100}
 				    
                    ],
 		prmNames:{
@@ -77,8 +77,6 @@ $(document).ready(function(){
 	
 	});  
 
-   
-
 });
 
 
@@ -89,6 +87,37 @@ function updateInit(obj,userId){
 }
 
 
+function delRow(delUrl,button,email){
+	var data1={"email" : email};
+	if(window.confirm("確定刪除此筆資料?")){
+		$.ajax({
+            type : "post",
+            url : delUrl,
+            cache : false,
+            data : $.toJSON(data1),
+            dataType : 'json',
+            contentType : "application/json",
+            success : function(result) {
+            	if(result.success=="success"){
+             		var rowid=button.parentNode.parentNode.rowIndex;
+	    	    	$("#tabelResult").jqGrid('delRowData', rowid);
+	    	    	alert("刪除成功 ");
+                } else if (result.success=="timeout") {
+  	            		alert("新增失敗  :  "+ result.errorMessage);
+  	            		location.href='/chungli2/logOut';
+  	            } else {
+            		alert("刪除失敗  :  "+ result.errorMessage);
+
+            	}
+//             	alert("result : " + JSON.stringify(result));
+            },
+
+            error : function(result) {
+            }
+
+        });
+	}
+}
 
 
 
@@ -97,7 +126,7 @@ function updateInit(obj,userId){
 
 
 <%@ include file="/pages/dataInit.jsp"%>
-
+<body>
 <form id="formUser" action="" method="post" target="_self" >
 	<center>
         <table border="0" class="tblInTD" style="width:200px;">
@@ -174,7 +203,7 @@ function updateInit(obj,userId){
  					   <td><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss"  value="${user.dateStamp}"/></td>
 					    <td>
 							<input type="button" name="btnUpdate" id="btnUpdate" value="編輯" title="update" onclick = "updateInit(this,'${user.email}')" size="30px" />
-<%-- 	                        <input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userDelete',this,'${user.userId}')"  size="30px" /> --%>
+	                        <input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userDelete',this,'${user.email}')"  size="30px" />
 						</td>
 				  </tr>
 				 </c:forEach>

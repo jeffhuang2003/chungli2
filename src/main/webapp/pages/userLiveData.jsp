@@ -78,11 +78,10 @@ $(document).ready(function(){
 });
 
 
-function selectLiveInit(obj,userId){
+function selectLiveInit(obj,email,leaderEamil){
 	$('#formUserUpdate').attr("action" ,"/chungli2/selectUserLivetInit");
-	$('#formUserUpdate').append("<input type=hidden name='userId' id='userId1' value='" + userId +"'></input>");
-	$('#formUserUpdate').append("<input type=hidden name='leaderUserId' id='leaderUserId' value='" + $("#userId").val() +"'></input>");
-	$('#formUserUpdate').append("<input type=hidden name='email' id='email1' value='" + $("#email").val() +"'></input>");
+	$('#formUserUpdate').append("<input type=hidden name='email' id='email1' value='" + email +"'></input>");
+	$('#formUserUpdate').append("<input type=hidden name='leaderEamil' id='leaderEamil1' value='" + leaderEamil +"'></input>");
 	$("#chineseName").val($("#chineseName").val());
 	$('#formUserUpdate').submit();
 }
@@ -169,7 +168,7 @@ function selectLiveInit(obj,userId){
 				       <td>${user.leaderEmail}</td>
  					   <td><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss"  value="${user.dateStamp}"/></td>
 					    <td>
-							<input type="button" name="btnUpdate" id="btnUpdate" value="選取" title="update" onclick = "selectLiveInit(this,'${user.userId}')" size="30px" />
+							<input type="button" name="btnUpdate" id="btnUpdate" value="選取" title="update" onclick = "selectLiveInit(this,'${user.email}','${user.leaderEmail}')" size="30px" />
 <%-- 	                        <input type="button" name="btnDel"  id="btnDel" value="刪除" title="delete"  onclick="delRow('/chungli2/userDelete',this,'${user.userId}')"  size="30px" /> --%>
 						</td>
 				  </tr>

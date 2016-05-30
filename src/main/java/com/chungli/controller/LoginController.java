@@ -50,12 +50,11 @@ public class LoginController extends BaseController{
 				if (user != null ) {
 					if (user.getEmail() == null || "".equals(user.getEmail())) {
 						url =  "pages/login" ;
-					} else if (user.getEmail() == null || "".equals(user.getEmail())) {
-						url =  "pages/login" ;
 					} else{
 						map.put("email", user.getEmail());
 						map.put("userSize", -1);
 						map.put("chineseName", "");
+						map = this.addMapKey(map, request.getSession(false));
 						url =  "pages/userData" ;
 					}
 				} else {
@@ -106,4 +105,26 @@ public class LoginController extends BaseController{
 		return obj.toString();
 	}
 	
+	
+	@RequestMapping(value="/logOut")
+	public ModelAndView loginOut(HttpServletRequest request){
+		logger.debug("logOut start !!!");
+		Map<String,Object> map = new HashMap<String,Object>();
+		String url = null ;
+		HttpSession session = null ;
+		url = checkSession(request);
+		if (url == null) {
+			session = getSession(request) ;
+			if (session != null) {
+				url =  "pages/login" ;
+			} else{
+				url =  "pages/login" ;
+			}
+			session = null ;
+		} else {
+			session = null ;
+		}
+		logger.debug("logOut end !!!");
+		return new ModelAndView(url, map);
+	}
 }

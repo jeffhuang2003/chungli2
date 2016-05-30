@@ -19,8 +19,8 @@
 </script>
 </head>
 <body style="margin: 0">
-<div style="background-image:url('../images/logob.png');">
-	<img src="../images/logo2.png" />
+<div style="background-image:url('../images/logo3.jpg');">
+	<img src="../images/logo3.jpg" />
 </div>
 
 </body>

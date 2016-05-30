@@ -11,7 +11,7 @@
 
 </head>
 <%@ include file="/include/pageHeader.jsp"%>
-<frameset rows="70,860,70" >
+<frameset rows="100,800,100" >
 	<frame name="banner" noresize="noresize" scrolling="no" src="main/title.jsp" target="contents">
 	<frame name="contents" src="login.jsp" target="main">
 	<frame name="footer" noresize="noresize" scrolling="no" src="main/title2.jsp" target="contents">

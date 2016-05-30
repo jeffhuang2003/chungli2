@@ -53,9 +53,13 @@ $(document).ready(function(){
             		$("#email").val(result.email);
             		$("#oldEmail").val(result.email);
             		alert("編輯成功 ");
-            	} else {
+            	} else if (result.success=="timeout") {
+	            		$("#btnUpdate").attr("disabled",false);
+  	            		alert("編輯失敗  :  "+ result.errorMessage);
+  	            		location.href='/chungli2/logOut';
+  	            }else {
             		$("#btnUpdate").attr("disabled",false);
-            		alert("編輯失敗  :  "+ result.errorMessage);;
+            		alert("編輯失敗  :  "+ result.errorMessage);
             	}
             },
 

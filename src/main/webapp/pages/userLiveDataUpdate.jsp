@@ -9,8 +9,10 @@
 <script>
 $(document).ready(function(){
  	jQuery('#formUser').validationEngine();//'attach', {promptPosition : "center", autoPositionUpdate : true});
- 	$("#team").val("${team}");
- 	$("#oldEmail").val("${email}");
+ 	$("#eaId").val("${eaId}");
+ 	$("#brokIdHidden").val("${brokId}");
+ 	$("#brokId").val("${brokId}");
+ 	$("#status").val("${status}");
  	$.fn.serializeObject = function(){  
         var o = {};  
         var a = this.serializeArray();  
@@ -30,19 +32,41 @@ $(document).ready(function(){
 
     //離開
     $("#btnLeave").click(function(){
-    	$("#formQueryUser").attr("action","/chungli2/queryUserProfileByLeaderUpdate");
+    	$("#formQueryUser").attr("action","/chungli2/selectUserLivetInit");
     	$("#formQueryUser").submit();
     });
     //新增
     $("#btnUpdate").click(function(){
     	  $("#btnUpdate").attr("disabled",true);
-  		if (!$('#formUser').validationEngine('validate')) {
+  		if ($("#eaId").val() == "-1") {
+  			 alert("請選擇EA程式");
   			$("#btnUpdate").attr("disabled",false);
-  		     return;  
-  		} 
+     	   return false ;
+        }
+  		if ($("#brokId").val() == "-1") {
+  			alert("請選券商");
+  			$("#btnUpdate").attr("disabled",false);
+      	   return false ;
+        }
+  		if ($("#status").val() == "-1") {
+  			alert("請選申請狀態");
+  			$("#btnUpdate").attr("disabled",false);
+      	   return false ;
+        }
+  		if ($("#count").val().trim() == "" || isNaN(Number($("#count").val().trim()))) {
+  			alert("入金金額必須為數字");
+  			$("#btnUpdate").attr("disabled",false);
+      	   return false ;
+        } else {
+            if ($("#count").val().trim().indexOf(".") !=-1) {
+            	alert("入金金額必須為整數");
+            	$("#btnUpdate").attr("disabled",false);
+            	 return false ;
+            }
+        }
 		$.ajax({
             type : "post",
-            url : '/chungli2/updateUserProfile',
+            url : '/chungli2/updateUserLive',
             cache : false,
             data : $.toJSON($('#formUser').serializeObject()),
             dataType : 'json',
@@ -52,12 +76,11 @@ $(document).ready(function(){
             		$("#btnUpdate").attr("disabled",false);
             		$("#email").val(result.email);
             		alert("編輯成功 ");
-            		if ($("#oldEmail").val() == $("#leaderEmail2").val()) {
-                    	if ($("#email").val() != $("#leaderEmail2").val()) {
-                    		$("#leaderEmail2").attr("value",$("#email").val());
-                        }
-                    }
-            	} else {
+            	} else if (result.success=="timeout") {
+            		    $("#btnUpdate").attr("disabled",false);
+  	            		alert("新增失敗  :  "+ result.errorMessage);
+  	            		location.href='/chungli2/logOut';
+  	            } else {
             		$("#btnUpdate").attr("disabled",false);
             		alert("編輯失敗  :  "+ result.errorMessage);;
             	}
@@ -78,9 +101,7 @@ function checkEmail(obj){
 	      $(obj).focus();   
 	      return false ;
 	   }
-       if ($("#oldEmail").val() == $(obj).val()) {
-    	   return false ;
-       }
+       
 	   //email被修改
 	   var data = {"email":$(obj).val()};
 	   $.ajax({
@@ -119,79 +140,88 @@ function checkEmail(obj){
    <br/>
    <fieldset>
          <legend>編輯</legend>
-         <table border="0" class="tblInTD" style="width:400px;">
+                  <table border="0" class="tblInTD" style="width:400px;">
             <tr>
-                <td  style="width:100px" align="left"><font size="3">會員名&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="chineseName" name="chineseName" class="validate[required,maxSize[50]] text-input" value='${chineseName}'/></td>
+                <td  style="width:100px" align="left"><font size="3">帳號&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" id="email" name="email"   value="${email}" readonly="readonly" style="width:150px;color:red;background-color:#D3D3D3;"/></td>
             </tr>
              <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:100px" align="left"><font size="3">英文名&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="englishName" name="englishName" value='${englishName}'/></td>
+                <td  style="width:100px" align="left"><font size="3">真倉帳號&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text"  id="userLiveId" name="userLiveId" value="${userLiveId}" readonly="readonly" style="width:150px;color:red;background-color:#D3D3D3;"/></td>
+            </tr>
+             <tr>
+                <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="width:100px" align="left"><font size="3">申請券商&nbsp;&nbsp;&nbsp;</font></td>
+                 <td style="width:200px" align="left">     
+                   <select name="brokId" id="brokId"  style="width : 150px; color: red;background-color:#D3D3D3;" disabled>
+                     <option value="-1" selected>---請選擇---</option>
+                     <c:forEach items="${brokList}" var="brokAge" varStatus="status" >
+                              <option value="${brokAge.brokId}">${brokAge.brokName}</option>
+                     </c:forEach>
+                   </select>
+                <input type="hidden" id="brokIdHidden" name="brokIdHidden" style="width:100px" />
             </tr>
             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
-            <tr>
-                <td style="width:100px" align="left"><font size="3">電話&nbsp;&nbsp;&nbsp;</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="phone" name="phone" class="validate[required,maxSize[20]] text-input" value='${phone}'/></td>
+  			<tr>
+                <td style="width:100px" align="left"><font size="3">智能程式代號&nbsp;&nbsp;</font></td>
+                <td style="width:200px" align="left">     
+                   <select name="eaId" id="eaId"  style="width : 150px;">
+                     <option value="-1" selected>---請選擇---</option>
+                     <c:forEach items="${eaList}" var="eaProgram" varStatus="status">
+                              <option value="${eaProgram.eaId}">${eaProgram.eaName}</option>
+                     </c:forEach>
+                   </select>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td  style="width:200px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:100px" align="left"><font size="3">帳號(E-Mail)</font></td><td style="width:200px" align="left"><input type="text" style="width:150px" id="email" name="email" class="validate[required,maxSize[50]] text-input" value='${email}' onblur="checkEmail(this)"/></td>
-            </tr>
-            <tr>
-                <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
-            </tr>
-            <tr>
-                <td style="width:100px" align="left"><font size="3">所屬團隊</font></td>
+                <td style="width:100px" align="left"><font size="3">申請狀態</font></td>
                 <td style="width:200px" align="left">
-                   <select name="team" id="team"  style="width : 150px;">
+                   <select name="status" id="status"  style="width : 150px;">
                     	<option value="-1" selected>---請選擇---</option>
-                        <option value="1" >台中洪老師</option>
-                        <option value="2">台北黃老師</option>
-                        <option value="3" >中壢葉老師</option>
-                        <option value="4">台南王老師</option>
+                        <option value="1">新申請</option>
+                        <option value="2">已入金</option>
+                        <option value="3">封包中</option>
+                        <option value="4">模擬盤</option>
+                        <option value="5">已上線</option>
+                        <option value="6">未啟用</option>
+                        <option value="7">已啟用</option>
                     	</select>
                 </td>
             </tr>
             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
-             <c:if test="${email != leaderEmail}">
             <tr>
-                 <td style="width:100px" align="left"><font size="3">leader</font></td>
-                 <td style="width:200px" align="left">
-                 <input type="text" style="width:150px;background-color:#D3D3D3;color: red"  id="leaderEmail1" name="leaderEmail" value='${leaderEmail}' readonly="readonly"/>
-                 </td>
+                <td style="width:100px" align="left"><font size="3">入倉金額</font></td>
+                <td style="width:200px" align="left">
+                  <input type="text" style="width:150px"  id="count" name="count" value='${count}' />
+                </td>
             </tr>
-             </c:if>
             <tr>
                 <td  style="width:100px" align="left"><font size="3">&nbsp;&nbsp;</font></td><td style="width:200px" align="left">&nbsp;&nbsp;</td>
             </tr>
              <tr>
                 <td style="width:300px" colspan="2" align="center">
                 	<input type="button" id="btnUpdate" value="編輯" style="width:100px" />
+                	<input type="button" id="btnCancel" value="清空" style="width:100px"/>
                 	<input type="button" id="btnLeave" value="離開" style="width:100px"/>
                 </td>
             </tr>
         </table>
-        
-            <table border="0" class="tblInTD" style="width:600px;">
-            <tr>
-                <td style="width:200px"><input type="hidden" style="width:200px" id="userId" name='userId'  value="${userId}" readonly="readonly" style="width:150px;background-color:black;"/></td>
-            </tr>  
-        </table>
    </fieldset>
      </center>  
-     <input type="hidden" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px;background-color:black;"/> 
-     <input type="hidden" id="oldEmail" name="oldEmail"  value=""/> 
 </form>
 <form id="formQueryUser" action="" method="post" target="_self" >
-   	<input type="hidden" style="width:200px" id="leaderUserId" name="leaderUserId"  value="${leaderUserId}" readonly="readonly" style="width:150px;background-color:black;"/>
-	<input type="hidden" style="width:200px" id="leaderEmail2" name="leaderEmail"  value="${leaderEmail}" readonly="readonly" style="width:150px;background-color:black;"/>
-    <input type="hidden" style="width:200px" id="parentChineseName" name="parentChineseName"  value="${parentChineseName}" readonly="readonly" style="width:150px;background-color:black;"/>
+   	<input type="hidden" style="width:200px" id="email1" name="email"  value="${email}" readonly="readonly" style="width:150px"/>
 </form>
 </body>
 

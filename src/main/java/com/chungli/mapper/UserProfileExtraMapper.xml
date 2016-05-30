@@ -60,5 +60,13 @@
 			   and #{endDate} <![CDATA[ >= ]]>  CONVERT(char(6), CrDate, 112)  
 			</if>
      </select>
+     
+      <select  id="selectTotalList" resultMap="BaseResultMap" parameterType="java.lang.String">
+     		SELECT  ChineseName, Password, Email, Phone, Team, CrDate, CrUser, DateStamp, UserStamp, 
+    				EnglishName , LeaderEmail,RoleId
+    		FROM UserProfile
+     	    WHERE LeaderEmail = #{userId}
+     	    or Email = #{userId}
+     </select>
   
 </mapper>

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,10 +49,12 @@ public class UserLiveController extends BaseController{
 	private BrokService brokService;
 
 	@RequestMapping(value="/updateUserLiveInit", method = RequestMethod.POST)
-	public ModelAndView updateUserLiveInit(@RequestParam(value="userId",required=false) String userId , @RequestParam(value="leaderUserId",required=false) String leaderUserId,@RequestParam(value="leaderEmail",required=false) String leaderEmail,@RequestParam(value="chineseName",required=false) String chineseName ,HttpServletRequest request){
+	public ModelAndView updateUserLiveInit(@RequestParam(value="userId",required=false) String userId , @RequestParam(value="userLiveId",required=false) String userLiveId,@RequestParam(value="chineseName",required=false) String chineseName ,HttpServletRequest request){
 		logger.debug("updateUserLiveInit start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
-		UserProfile userProfile = null ;
+		UserLive userLive = null ;
+		List<Brokerage> brokList = null ;
+		List<EaProgram> eaList = null ;
 		try {
 			String url = null ;
 			url = checkSession(request);
@@ -59,21 +62,18 @@ public class UserLiveController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			userProfile = userProfileService.selectUserProfile(userId);
-			map.put("userId", userProfile.getEmail());
-			map.put("englishName", userProfile.getEnglishName());
-			map.put("phone", userProfile.getPhone());
-			map.put("email", userProfile.getEmail());
-			map.put("team", userProfile.getTeam());
-			if (userProfile !=null) {
-				map.put("leaderUserId", userProfile.getLeaderEmail());
-			} else {
-				map.put("leaderUserId", leaderUserId);
-			}
-			map.put("leaderEmail", userProfile.getLeaderEmail());
-			map.put("chineseName", userProfile.getChineseName());
-			map.put("parentChineseName", chineseName);
-			
+			userLive = userLiveService.selectUserLive(userId, userLiveId);
+			brokList = brokService.selectBrokerageList();
+			eaList = eaService.selectEaProgramList();
+			map.put("email", userLive.getUserId());
+			map.put("userLiveId", userLive.getUserLiveId());
+			map.put("eaId", userLive.getEaId());
+			map.put("brokId", userLive.getBrokId());
+			map.put("status", userLive.getStatus());
+			map.put("count", userLive.getCount());
+			map.put("eaList", eaList);
+			map.put("brokList", brokList);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("updateUserLiveInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -96,14 +96,12 @@ public class UserLiveController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			brokList = brokService.selectBrokerageList();
-			eaList = eaService.selectEaProgramList();
-			map.put("userId", userId);
-			map.put("leaderUserId", leaderUserId);
+			eaList = eaService.selectEaProgramList();;
 			map.put("email", email);
 			map.put("leaderEmail", leaderEmail);
 			map.put("eaList", eaList);
 			map.put("brokList", brokList);
-		   		
+			map = this.addMapKey(map, request.getSession(false));	
 		} catch (Exception e) {
 			logger.debug("insertUserLiveInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -121,43 +119,54 @@ public class UserLiveController extends BaseController{
 		JSONObject obj = new JSONObject();
 		String email = map.get("email") != null ? map.get("email").trim() : null ;
 		logger.debug("email : " + email);
-		String chineseName = map.get("chineseName")!= null ? map.get("chineseName").trim() : null  ;
-		logger.debug("chineseName : " + chineseName);
-		String englishName = map.get("englishName")!= null ? map.get("englishName").trim() : null  ;
-		logger.debug("englishName : " + englishName);
-		String phone = map.get("phone")!= null ? map.get("phone").trim() : null  ;
-		logger.debug("phone : " + phone);
-		String team = map.get("team")!= null ? map.get("team").trim() : null  ;
-		logger.debug("team : " + team);
-		String userId = map.get("userId")!= null ? map.get("userId").trim() : null  ;
-		logger.debug("userId : " + userId);
-		String leaderUserId = map.get("leaderUserId")!= null ? map.get("leaderUserId").trim() : null  ;
-		logger.debug("leaderUserId : " + leaderUserId);
-		UserProfile user = new UserProfile() ;
-		UserProfile leaderUser = null;
-		int count = 0 ;
+		String userLiveId = map.get("userLiveId")!= null ? map.get("userLiveId").trim() : null  ;
+		logger.debug("userLiveId : " + userLiveId);
+		String eaId = map.get("eaId")!= null ? map.get("eaId").trim() : null  ;
+		logger.debug("eaId : " + eaId);
+		String brokId = map.get("brokIdHidden")!= null ? map.get("brokIdHidden").trim() : null  ;
+		logger.debug("brokId : " + brokId);
+		String status = map.get("status")!= null ? map.get("status").trim() : "0"  ;
+		logger.debug("status : " + status);
+		String count = map.get("count")!= null ? map.get("count").trim() : null  ;
+		logger.debug("count : " + count);
+		UserLive userLive = null ;
+		int countSize = 0 ;
 		Date sysDate = new Date();
+		UserProfile userProfile = null ;
 	    try {
-	    	leaderUser = userProfileService.selectUserProfile(leaderUserId);
-	    	user.setCrUser(leaderUser.getChineseName());
-	    	user.setUserStamp(leaderUser.getChineseName());
-	    	user.setEmail(email);
-	    	user.setEnglishName(englishName);
-	    	user.setTeam(new Integer(team));
-	    	user.setPhone(phone);
-	    	user.setCrDate(sysDate);
-	    	user.setDateStamp(sysDate);
-	    	user.setChineseName(chineseName);
-	    	count =  userProfileService.updateUserProfile(user);
-
-	    	if (count > 0) {
+	    	String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
+	    	userLive = new UserLive();
+	    	userProfile = userProfileService.selectUserProfile(email);
+	    	if (userProfile == null) {
+	    		throw new Exception("新增失敗");
+	    	} 
+	    	if (userProfile != null) {
+		    	userLive.setUserStamp(userProfile.getChineseName());
+	    	} 
+	    	userLive.setUserId(email);
+	    	userLive.setUserLiveId(userLiveId);
+	    	userLive.setStatus(new Integer(status));
+	    	userLive.setBrokId(new Integer(brokId));
+	    	userLive.setEaId(new Integer(eaId));
+	    	userLive.setUserStamp("System");
+	    	userLive.setDateStamp(sysDate);
+	    	userLive.setCount(new Integer(count));
+	    	countSize = userLiveService.updateUserLive(userLive) ;
+	    	if (countSize > 0) {
 	    		obj.put("success","success");
 	    		obj.put("errorMessage","");
-	    		obj.put("email", email);
 	    	} else {
 	    		throw new Exception("新增失敗");
 	    	}
 	    	
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.error("updateUserLive error : " + e.getMessage());
 			obj.put("success","error");
@@ -177,38 +186,40 @@ public class UserLiveController extends BaseController{
 		String userLiveId = map.get("userLiveId") != null ? map.get("userLiveId").trim() : null ;
 		logger.debug("userLiveId : " + userLiveId);
 		String eaId = map.get("eaId")!= null ? map.get("eaId").trim() : null  ;
-		logger.debug("userLiveId : " + userLiveId);
+		logger.debug("eaId : " + eaId);
 		String brokId = map.get("brokId")!= null ? map.get("brokId").trim() : null  ;
 		logger.debug("brokId : " + brokId);
 		String status = map.get("status")!= null ? map.get("status").trim() : null  ;
 		logger.debug("status : " + status);
 		String count = map.get("count")!= null ? map.get("count").trim() : "0"  ;
 		logger.debug("count : " + count);
-		String userId = map.get("userId")!= null ? map.get("userId").trim() : null  ;
-		logger.debug("userId : " + userId);
-		String leaderUserId = map.get("leaderUserId")!= null ? map.get("leaderUserId").trim() : null  ;
-		logger.debug("leaderUserId : " + leaderUserId);
+		String email = map.get("email")!= null ? map.get("email").trim() : null  ;
+		logger.debug("userId : " + email);
 		UserLive userLive = new UserLive() ;;
 		Date sysDate = new Date();
 		int insertCount = 0 ;
-		List<UserProfile> list= null ;
 		UserProfile userProfile = null ;
 	    try {
-	    	list = userProfileService.selectUserProfileList(leaderUserId, null);
-	    	if (list != null && !list.isEmpty()) {
-	    		userProfile = list.get(0);
-	    	} else {
+	    	String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
+	    	userProfile = userProfileService.selectUserProfile(email);
+	    	if (userProfile == null) {
 	    		throw new Exception("新增失敗");
-	    	}
-	    	userLive.setUserId(userId);
+	    	} 
+	    	if (userProfile != null) {
+	    		userLive.setCrUser(userProfile.getChineseName());
+		    	userLive.setUserStamp(userProfile.getChineseName());
+	    	} 
+	    	userLive.setUserId(email);
 	    	userLive.setUserLiveId(userLiveId);
 	    	userLive.setEaId(new Integer(eaId));
 	    	userLive.setBrokId(new Integer(brokId));
 	    	userLive.setStatus(new Integer(status));
 	    	userLive.setCount(new Integer(count));
 	    	userLive.setCrDate(sysDate);
-	    	userLive.setCrUser(userProfile.getChineseName());
-	    	userLive.setUserStamp(userProfile.getChineseName());
 	    	userLive.setDateStamp(sysDate);
 	    	insertCount = userLiveService.insertUserLive(userLive) ;
 	    	if (insertCount > 0) {
@@ -218,6 +229,10 @@ public class UserLiveController extends BaseController{
 	    		throw new Exception("新增失敗");
 	    	}
 	    	
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.error("insertUserLive error : " + e.getMessage());
 			obj.put("success","error");
@@ -230,7 +245,7 @@ public class UserLiveController extends BaseController{
 	}
 	
 	@RequestMapping(value="/queryUserLiveProfile", method = RequestMethod.POST)
-	public ModelAndView queryUserLiveProfile(@RequestParam(value="email",required=false) String email ,@RequestParam(value="userId",required=false) String userId,@RequestParam(value="chineseName",required=false) String chineseName , HttpServletRequest request){
+	public ModelAndView queryUserLiveProfile(@RequestParam(value="email",required=false) String email ,@RequestParam(value="chineseName",required=false) String chineseName , HttpServletRequest request){
 		logger.debug("queryUserLiveProfile start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<UserProfile> list = null ;
@@ -241,16 +256,16 @@ public class UserLiveController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			list = userProfileService.selectUserProfileList(userId, chineseName);
+			list = userProfileService.selectTotalList(email, chineseName);
 			map.put("list", list);
 			map.put("email", email);
-			map.put("userId", userId);
 			if (list != null && !list.isEmpty()) {
 				map.put("userSize", list.size());
 			}else {
 				map.put("userSize", 0);
 			}
 			map.put("chineseName", chineseName);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserLiveProfile error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -290,6 +305,7 @@ public class UserLiveController extends BaseController{
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserLiveByLeaderInsert error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -323,6 +339,7 @@ public class UserLiveController extends BaseController{
 				map.put("userSize", 0);
 			}
 			map.put("chineseName", parentChineseName);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserLiveByLeaderUpdate error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -334,13 +351,22 @@ public class UserLiveController extends BaseController{
 	
 	@RequestMapping(value="/userLiveDelete")
 	@ResponseBody
-	public String userLiveDelete(@RequestBody String userId){
+	public String userLiveDelete(@RequestBody String userId,HttpServletRequest request){
 		logger.debug("userLiveDelete start !!!");
 		JSONObject obj = new JSONObject();
 		try {
+			String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
 			userProfileService.deleteUserProfile(userId);
 			obj.put("success", "success");
 			obj.put("errorMessage", "");
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.debug("userLiveDelete error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -352,8 +378,52 @@ public class UserLiveController extends BaseController{
 	}
 	
 	
+	@RequestMapping(value="/selectUserLiveQry", method = RequestMethod.POST)
+	public ModelAndView selectUserLiveQry(@RequestParam(value="email",required=false) String email , @RequestParam(value="leaderEmail",required=false) String leaderEmail ,@RequestParam(value="chineseName",required=false) String chineseName ,
+										  @RequestParam(value="eaProgram",required=false) String eaProgram , @RequestParam(value="brokerAge",required=false) String brokerAge , 
+										  HttpServletRequest request){
+		logger.debug("selectUserLiveQry start !!!");
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<UserLive> list = null ;
+		List<Brokerage> brokList = null ;
+		List<EaProgram> eaList = null ;
+		try {
+			
+			String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				return new ModelAndView(url, map);
+			}
+			
+			list = userLiveService.selectUserLiveQry(email,eaProgram,brokerAge);
+			brokList = brokService.selectBrokerageList();
+			eaList = eaService.selectEaProgramList();
+			map.put("list", list);
+			map.put("brokList", brokList);
+			map.put("eaList", eaList);
+			map.put("email", email);
+			map.put("leaderEmail", leaderEmail);
+			map.put("chineseName", chineseName);
+			map.put("eaProgram", eaProgram);
+			map.put("brokerAge", brokerAge);
+			if (list != null && !list.isEmpty()) {
+				map.put("userSize", list.size());
+			}else {
+				map.put("userSize", 0);
+			}
+			map = this.addMapKey(map, request.getSession(false));
+		} catch (Exception e) {
+			logger.debug("selectUserLiveQry error : " + e.getMessage());
+			logger.debug(getTrace(e));
+		}
+		
+		logger.debug("selectUserLiveQry end !!!");
+		return new ModelAndView("pages/userLiveData2", map);
+	}
+	
+	
 	@RequestMapping(value="/selectUserLivetInit", method = RequestMethod.POST)
-	public ModelAndView selectUserLivetInit(@RequestParam(value="userId",required=false) String userId ,@RequestParam(value="email",required=false) String email , @RequestParam(value="leaderUserId",required=false) String leaderUserId ,@RequestParam(value="chineseName",required=false) String chineseName ,HttpServletRequest request){
+	public ModelAndView selectUserLivetInit(@RequestParam(value="email",required=false) String email , @RequestParam(value="leaderEmail",required=false) String leaderEmail ,@RequestParam(value="chineseName",required=false) String chineseName ,HttpServletRequest request){
 		logger.debug("selectUserLivetInit start !!!");
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<UserLive> list = null ;
@@ -367,25 +437,21 @@ public class UserLiveController extends BaseController{
 				return new ModelAndView(url, map);
 			}
 			
-			list = userLiveService.selectUserLiveList(userId);
+			list = userLiveService.selectUserLiveList(email);
 			brokList = brokService.selectBrokerageList();
 			eaList = eaService.selectEaProgramList();
-//			if (list == null ||  list.isEmpty()) {
-//				list = new ArrayList<UserLive>() ;
-//				list.add(getUserLive());
-//			}
 			map.put("list", list);
 			map.put("brokList", brokList);
 			map.put("eaList", eaList);
-			map.put("userId", userId);
-			map.put("leaderUserId", leaderUserId);
 			map.put("email", email);
+			map.put("leaderEmail", leaderEmail);
 			map.put("chineseName", chineseName);
 			if (list != null && !list.isEmpty()) {
 				map.put("userSize", list.size());
 			}else {
 				map.put("userSize", 0);
 			}
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("selectUserLivetInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -400,23 +466,23 @@ public class UserLiveController extends BaseController{
 		logger.debug("checkUserLiveId start !!!");
 		JSONObject obj = new JSONObject();
 		String userLiveId 	= map.get("userLiveId")    == null? "" : map.get("userLiveId").trim();
-		String userId 	= map.get("userId")    == null? "" : map.get("userId").trim();
+		String email 	= map.get("email")    == null? "" : map.get("email").trim();
 		UserLive userLive = null ;
 	    try {
 	    	if ( "".equals(userLiveId)) {
 	    		throw new Exception("真倉帳號不能為空");
 	    	} else {
-	    		userLive = userLiveService.checkUserLiveId(userLiveId,userId);
+	    		userLive = userLiveService.checkUserLiveId(userLiveId,email);
 	    	}
 
 	    	if (userLive == null) {
 	    		obj.put("success","success");
-	    		obj.put("errorMessage","此帳號尚未有人使用");
+	    		obj.put("errorMessage","此帳號尚未申請");
 	    		obj.put("resultValue","true");
 	    	} else {
 	    		obj.put("success","error");
 	    		obj.put("resultValue","false");
-	    		obj.put("errorMessage","此帳號已有人使用");
+	    		obj.put("errorMessage","此帳號已申請");
 	    	}
 	    	
 		} catch (Exception e) {
@@ -430,18 +496,37 @@ public class UserLiveController extends BaseController{
 		logger.debug("checkUserLiveId end !!!");
 		return obj.toString();
 	}
-	
-	private UserLive getUserLive(){
-		UserLive live = new UserLive();
-		live.setBrokId(1);
-		live.setCount(1000);
-		live.setDateStamp(new Date());
-		live.setEaId(1);
-		live.setUserId("JON000000000001");
-		live.setStatus(1);
-		live.setUserLiveId("811301");
-		return live ;
+	@RequestMapping(value="/deleteUserLive", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteUserLive(@RequestBody Map<String,String> map ,HttpServletRequest request){
+		logger.debug("deleteUserLive start !!!");
+		JSONObject obj = new JSONObject();
+		String delUserLiveId 	= map.get("delUserLiveId")    == null? "" : map.get("delUserLiveId").trim();
+		String delUserId 	= map.get("delUserId")    == null? "" : map.get("delUserId").trim();
+	    try {
+	    	String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
+	    	userLiveService.deltetUserLive(delUserId, delUserLiveId) ;
+	    	obj.put("success","success");
+	    	obj.put("errorMessage","");
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
+		} catch (Exception e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","error");
+			obj.put("errorMessage","系統發生錯誤;請通知IT人員!!!");
+		}
+	 
+	    
+		logger.debug("deleteUserLive end !!!");
+		return obj.toString();
 	}
+	
 	
 	private String getTrace(Throwable t) {
 		StringWriter stringWriter = new StringWriter();

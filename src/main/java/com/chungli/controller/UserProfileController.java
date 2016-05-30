@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,7 +53,7 @@ public class UserProfileController extends BaseController{
 			map.put("leaderEmail", userProfile.getLeaderEmail());
 			map.put("chineseName", userProfile.getChineseName());
 			map.put("parentChineseName", chineseName);
-			
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("userUpdateInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -76,7 +77,7 @@ public class UserProfileController extends BaseController{
 			map.put("leaderEmail", email);
 			map.put("email", email);
 			map.put("chineseName", chineseName);
-		   		
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("insertUserProfileInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -113,6 +114,11 @@ public class UserProfileController extends BaseController{
 		int count = 0 ;
 		Date sysDate = new Date();
 	    try {
+	    	String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
 	    	leaderUser = userProfileService.selectUserProfile(leaderEmail);
 	    	user = userProfileService.selectUserProfile(email);
 	    	user.setCrUser(leaderUser.getChineseName());
@@ -132,6 +138,10 @@ public class UserProfileController extends BaseController{
 	    		throw new Exception("新增失敗");
 	    	}
 	    	
+		} catch (TimeoutException e) {
+			logger.error("updatetUserProfile error : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.error("updatetUserProfile error : " + e.getMessage());
 			obj.put("success","error");
@@ -165,6 +175,11 @@ public class UserProfileController extends BaseController{
 		int count = 0 ;
 		Date sysDate = new Date();
 	    try {
+	    	String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
 	    	leaderUser = userProfileService.selectUserProfile(leaderEmail);
 	    	user.setCrUser(leaderUser.getChineseName());
 	    	user.setUserStamp(leaderUser.getChineseName());
@@ -186,6 +201,10 @@ public class UserProfileController extends BaseController{
 	    		throw new Exception("新增失敗");
 	    	}
 	    	
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.error("errorMessage : " + e.getMessage());
 			obj.put("success","error");
@@ -218,6 +237,7 @@ public class UserProfileController extends BaseController{
 				map.put("userSize", 0);
 			}
 			map.put("chineseName", chineseName);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserProfile error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -250,6 +270,7 @@ public class UserProfileController extends BaseController{
 				map.put("userSize", 0);
 			}
 			map.put("chineseName", parentChineseName);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserProfileByLeader error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -282,6 +303,7 @@ public class UserProfileController extends BaseController{
 				map.put("userSize", 0);
 			}
 			map.put("chineseName", parentChineseName);
+			map = this.addMapKey(map, request.getSession(false));
 		} catch (Exception e) {
 			logger.debug("queryUserProfileByLeader error : " + e.getMessage());
 			logger.debug(getTrace(e));
@@ -293,18 +315,35 @@ public class UserProfileController extends BaseController{
 	
 	@RequestMapping(value="/userDelete")
 	@ResponseBody
-	public String userDelete(@RequestBody String userId){
+	public String userDelete(@RequestBody Map<String,String> map ,HttpServletRequest request){
 		logger.debug("userDelete start !!!");
 		JSONObject obj = new JSONObject();
+		String email = map.get("email") != null ? map.get("email").trim() : null ;
+		int childCount= 0 ;
 		try {
-			userProfileService.deleteUserProfile(userId);
-			obj.put("success", "success");
-			obj.put("errorMessage", "");
+			String url = null ;
+			url = checkSession(request);
+			if (url != null) {
+				throw new TimeoutException();
+			}
+			childCount = userProfileService.selectChildListCount(email);
+			if (childCount > 0) {
+				obj.put("success", "error");
+				obj.put("errorMessage", "此帳號有子會員,無法進行刪除");
+			} else {
+				userProfileService.deleteUserProfile(email);
+				obj.put("success", "success");
+				obj.put("errorMessage", "");
+			}
+		} catch (TimeoutException e) {
+			logger.error("errorMessage : " + e.getMessage());
+			obj.put("success","timeout");
+			obj.put("errorMessage","系統愈時;請重新登入");
 		} catch (Exception e) {
 			logger.debug("userUpdateInit error : " + e.getMessage());
 			logger.debug(getTrace(e));
 			obj.put("success", "error");
-			obj.put("errorMessage", e.getMessage());
+			obj.put("errorMessage", "系統發生錯誤;請通知IT人員!!!");
 		}
 		logger.debug("userDelete end !!!");
 		return obj.toString();

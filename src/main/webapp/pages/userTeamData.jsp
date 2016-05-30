@@ -167,10 +167,14 @@ function vailDate(startDate , endDate){
 
     if (endYear - startYear < 0) {
     	return false;
+     } else {
+         if (endYear - startYear ==  0) {
+        	 if (endMonth - startMonth < 0) {
+        	    	return false;
+        	 }
+         }
      }
-    if (endMonth - startMonth < 0) {
-    	return false;
-     }
+    return true;
 	
 }
 

@@ -1,5 +1,6 @@
 package com.chungli.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,5 +27,30 @@ public class EaService {
 		return list ;
 	}
 	
+	@Transactional(rollbackFor=Exception.class)
+	public List<EaProgram> qryEaProgramList(String reqStr) throws Exception {
+		List<EaProgram> list = null ;
+		List<Integer> eaStrList = null ;
+		String[] array = null ;
+		EaProgramExample example = new EaProgramExample() ;
+		if (reqStr.indexOf(",") !=-1) {
+			array = reqStr.split(",") ;
+			eaStrList = getEaProgramListStr(array);
+			example.createCriteria().andEaIdIn(eaStrList);
+		} else {
+			example.createCriteria().andEaIdEqualTo(Integer.valueOf(reqStr));
+		} 
+		list = eaProgramMapper.selectByExample(example);
+		return list ;
+	}
+	
+	
+	public  List<Integer>  getEaProgramListStr(String [] eaProgramArray){
+		List<Integer>  list = new ArrayList<Integer>() ;
+		for (String str : eaProgramArray) {
+			list.add(Integer.valueOf(str));
+		}
+		return list ;
+	}
 	
 }
